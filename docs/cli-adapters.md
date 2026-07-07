@@ -78,9 +78,23 @@ Supported Hermes tool names:
 
 ## Codex CLI
 
-Codex hook support and config shape can vary by version, so the MVP uses permissive normalization for likely payloads. Treat the Codex config example as experimental until verified against the exact Codex version being targeted.
+Codex CLI 0.134+ exposes Claude-style lifecycle hooks from `~/.codex/config.toml` when hooks are enabled. NotATechBro should run as an observer-only command hook: it writes the human preview to stderr and leaves stdout empty by default.
 
 Candidate supported payloads:
+
+```json
+{
+  "hook_event_name": "PreToolUse",
+  "tool_name": "Bash",
+  "tool_input": { "command": "pytest" },
+  "cwd": "/path/to/project",
+  "permission_mode": "default",
+  "session_id": "...",
+  "tool_use_id": "...",
+  "transcript_path": null,
+  "turn_id": "..."
+}
+```
 
 ```json
 {
@@ -98,19 +112,18 @@ Candidate supported payloads:
 }
 ```
 
-Possible config pattern, to verify for the target Codex version:
+Config pattern:
 
 ```toml
-[[hooks.pre_tool_call]]
-command = "notatechbro"
+[features]
+hooks = true
+
+[[hooks.PreToolUse]]
+matcher = "Bash"
+hooks = [{ type = "command", command = "notatechbro", timeout = 5 }]
 ```
 
-If the host requires JSON stdout:
-
-```toml
-[[hooks.pre_tool_call]]
-command = "notatechbro --json"
-```
+Do not use `notatechbro --json` for Codex yet. Codex has its own hook response schema for blocking or mutating tool calls; this project is currently explanation-only.
 
 ## Adapter implementation rules
 

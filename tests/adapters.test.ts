@@ -46,6 +46,21 @@ describe("adapter normalization", () => {
       command: "pytest",
       source: "codex",
     });
+
+    expect(
+      normalizePayload({
+        cwd: "/repo",
+        hook_event_name: "PreToolUse",
+        model: "gpt-5.5",
+        permission_mode: "default",
+        session_id: "session",
+        tool_input: { command: "npm test" },
+        tool_name: "Bash",
+        tool_use_id: "tool-use",
+        transcript_path: null,
+        turn_id: "turn",
+      }),
+    ).toMatchObject({ kind: "shell", command: "npm test", source: "codex", cwd: "/repo" });
   });
 
   it("keeps unknown payloads explainable", () => {

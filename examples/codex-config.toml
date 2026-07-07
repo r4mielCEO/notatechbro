@@ -1,8 +1,9 @@
-# Experimental placeholder. Verify against the Codex CLI version being targeted.
-# The MVP parser supports candidate `tool_name: "shell"` and `tool_call.name: "shell"` payloads.
+# Codex CLI 0.134+ hook shape. Keep this observer-only: notatechbro writes
+# human preview text to stderr and leaves stdout empty in default mode.
 
-[[hooks.pre_tool_call]]
-command = "notatechbro"
+[features]
+hooks = true
 
-# If the host requires JSON hook responses on stdout, use:
-# command = "notatechbro --json"
+[[hooks.PreToolUse]]
+matcher = "Bash"
+hooks = [{ type = "command", command = "notatechbro", timeout = 5 }]

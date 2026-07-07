@@ -70,18 +70,18 @@ Hermes local evidence:
 - `hermes hooks --help` confirms hook management commands: `list`, `test`, `doctor`, and allowlist management.
 - Hermes can test configured hooks against synthetic payloads, which is the next step once a project hook is installed in the user's Hermes config.
 
-### Codex-style candidate payload
+### Codex PreToolUse payload
 
 Input:
 
 ```json
-{"tool_call":{"name":"shell","input":{"command":"pytest"}}}
+{"cwd":"/repo","hook_event_name":"PreToolUse","model":"gpt-5.5","permission_mode":"default","session_id":"session","tool_input":{"command":"npm test"},"tool_name":"Bash","tool_use_id":"tool-use","transcript_path":null,"turn_id":"turn"}
 ```
 
 Output on stderr:
 
 ```text
-This will run Python tests.
+This will run this project's test suite.
 ```
 
 Codex local evidence:
@@ -89,13 +89,23 @@ Codex local evidence:
 - `codex --version` returns `codex-cli 0.134.0`.
 - `codex --help` includes hook-related trust controls such as `--dangerously-bypass-hook-trust` and config overrides.
 - `codex doctor` passes overall (`0 fail`) for the local installation.
-- The exact Codex hook config contract should still be verified against the target Codex version before claiming full support, because Codex hook shapes vary by release.
+- OpenAI Codex source defines hook events under `hooks.PreToolUse` in TOML and the PreToolUse command input schema requires `cwd`, `hook_event_name: "PreToolUse"`, `model`, `permission_mode`, `session_id`, `tool_input`, `tool_name`, `tool_use_id`, `transcript_path`, and `turn_id`.
+- A strict-config probe accepted this config shape for the installed Codex CLI:
+
+```toml
+[features]
+hooks = true
+
+[[hooks.PreToolUse]]
+matcher = "Bash"
+hooks = [{ type = "command", command = "notatechbro", timeout = 5 }]
+```
 
 ## Current status
 
 - Claude Code: installed locally; representative `PreToolUse` payload passes; docs now use `notatechbro`.
 - Hermes: installed locally; representative `pre_tool_call` payload passes; `hermes hooks` subcommands are available for a configured-hook test.
-- Codex: installed locally and healthy; candidate `tool_call.name = shell` payload passes; config remains marked experimental until verified against the exact target Codex hook contract.
+- Codex: installed locally and healthy; exact `PreToolUse` payload/config shape for Codex CLI 0.134+ is documented and covered by adapter tests. A full interactive Codex run with hook trust accepted is still the final end-to-end check.
 
 ## Next verification step
 

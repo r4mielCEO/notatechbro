@@ -48,9 +48,15 @@
   "tool_name": "terminal",
   "tool_input": { "command": "git push" }
 }</code></pre>
-          <h2>Codex-style payloads</h2>
-          <p>Codex hook shapes vary by version, so this support is permissive until verified against the exact Codex CLI version you target.</p>
-          <pre><code>{ "tool_call": { "name": "shell", "input": { "command": "pytest" } } }</code></pre>
+          <h2>Codex CLI</h2>
+          <p>Codex CLI 0.134+ supports Claude-style lifecycle hooks from <code>~/.codex/config.toml</code>. Keep NotATechBro observer-only: default mode writes human text to stderr and leaves stdout empty.</p>
+          <pre><code>[features]
+hooks = true
+
+[[hooks.PreToolUse]]
+matcher = "Bash"
+hooks = [{ type = "command", command = "notatechbro", timeout = 5 }]</code></pre>
+          <p>Do not use <code>notatechbro --json</code> for Codex yet; Codex has its own structured hook response schema for blocking or mutating calls.</p>
         </article>
       </section>
     </main>

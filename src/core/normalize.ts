@@ -4,6 +4,9 @@ import type { ActionSource, NormalizedAction } from "./types.js";
 const HookPayloadSchema = z
   .object({
     hook_event_name: z.string().optional(),
+    agent_type: z.string().optional(),
+    permission_mode: z.string().optional(),
+    turn_id: z.string().optional(),
     tool_name: z.string().optional(),
     tool_input: z.unknown().optional(),
     cwd: z.string().optional(),
@@ -25,7 +28,7 @@ export function normalizePayload(payload: unknown): NormalizedAction {
   const data = parsed.data;
   const toolName = data.tool_call?.name ?? data.tool_name ?? "unknown";
   const input = data.tool_call?.input ?? data.tool_call?.arguments ?? data.tool_input;
-  const source = detectSource(data.hook_event_name, toolName, data.tool_call !== undefined);
+  const source = detectSource(data, toolName, data.tool_call !== undefined);
   const cwd = data.cwd;
   const command = getString(input, ["command", "cmd", "script"]);
 
@@ -46,8 +49,15 @@ export function normalizePayload(payload: unknown): NormalizedAction {
   return withOptional(unknownTool(toolName, source, input), { cwd });
 }
 
-function detectSource(hookEventName: string | undefined, toolName: string, hasToolCall: boolean): ActionSource {
+function detectSource(data: z.infer<typeof HookPayloadSchema>, toolName: string, hasToolCall: boolean): ActionSource {
+  const hookEventName = data.hook_event_name;
   if (hookEventName?.startsWith("pre_tool_call") || hookEventName === "pre_tool_call") return "hermes";
+  if (
+    hookEventName === "PreToolUse" &&
+    (data.agent_type?.toLowerCase().includes("codex") || data.turn_id !== undefined || data.permission_mode !== undefined)
+  ) {
+    return "codex";
+  }
   if (["Bash", "Write", "Edit", "MultiEdit", "Read"].includes(toolName)) return "claude";
   if (hasToolCall || ["shell", "apply_patch"].includes(toolName)) return "codex";
   if (["terminal", "bash", "write_file", "read_file", "patch"].includes(toolName)) return "hermes";
