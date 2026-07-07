@@ -1,0 +1,38 @@
+name: Feature request
+description: Suggest a new rule, integration, UX improvement, or product idea
+title: "Feature: "
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Ideas, forks, experiments, and alternate versions are welcome.
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem would this solve?
+      description: Describe the approval moment or setup flow this would improve.
+    validations:
+      required: true
+  - type: textarea
+    id: idea
+    attributes:
+      label: What would you like to add or change?
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Explanation rule
+        - Agent CLI adapter
+        - Docs/examples
+        - Landing page/UI
+        - Packaging/release
+        - Other
+  - type: textarea
+    id: examples
+    attributes:
+      label: Example commands or payloads
+      render: shell

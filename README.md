@@ -61,7 +61,7 @@ The CLI reads hook JSON on stdin and normalizes common payloads from:
 
 - Claude Code `PreToolUse` command hooks
 - Hermes `pre_tool_call` shell hooks
-- Codex-style `shell` / `tool_call` payloads, currently treated permissively because Codex hook contracts vary by version
+- Codex CLI 0.134+ `PreToolUse` command hooks, plus permissive support for older `shell` / `tool_call` payload shapes
 - generic tool payloads with `tool_name` and `tool_input`
 
 Human preview text goes to stderr by default so stdout stays available for hook protocols.
@@ -156,11 +156,32 @@ The Markdown files remain the source docs for GitHub:
 - `docs/architecture.md`
 - `docs/hook-verification.md`
 
+## Contributing
+
+Contributions are welcome. Forks, experiments, alternate branches, and opinionated versions are welcome too.
+
+Good first contributions include:
+
+- better explanations for common commands
+- new command families
+- real hook payloads from agent CLIs
+- adapter examples for more tools
+- docs and setup improvements
+
+Start with [`CONTRIBUTING.md`](CONTRIBUTING.md). Please keep the project local-first, observer-only, and understandable for non-technical users.
+
+Community files:
+
+- [`CONTRIBUTING.md`](CONTRIBUTING.md)
+- [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md)
+- [`SECURITY.md`](SECURITY.md)
+- [`SUPPORT.md`](SUPPORT.md)
+
 ## Hook verification status
 
-This checkpoint includes adapter smoke tests against representative Claude Code, Hermes, and Codex-style payloads. See `docs/hook-verification.md` for the exact inputs, outputs, and remaining caveats.
+This checkpoint includes adapter smoke tests against representative Claude Code, Hermes, and Codex payloads. See `docs/hook-verification.md` for the exact inputs, outputs, and remaining caveats.
 
-Codex remains marked as candidate support until the hook contract is verified inside the exact Codex CLI version being targeted.
+Codex CLI 0.134+ `PreToolUse` config and payload shape are documented and covered by adapter tests. A full interactive Codex hook run with hook trust accepted is still the final end-to-end check.
 
 ## Development
 

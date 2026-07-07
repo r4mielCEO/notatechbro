@@ -1,0 +1,35 @@
+name: Adapter or hook payload
+description: Share a real hook payload from an agent CLI or request support for one
+title: "Adapter: "
+labels: [adapter]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please redact secrets, private paths, tokens, and sensitive file contents before sharing payloads.
+  - type: input
+    id: agent
+    attributes:
+      label: Agent CLI
+      placeholder: Claude Code, Codex, Hermes, Cursor, etc.
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Agent CLI version
+  - type: textarea
+    id: payload
+    attributes:
+      label: Real hook payload shape
+      description: Paste a redacted example payload if you can.
+      render: json
+  - type: textarea
+    id: config
+    attributes:
+      label: Hook config snippet
+      render: shell
+  - type: textarea
+    id: expected
+    attributes:
+      label: What should NotATechBro say?

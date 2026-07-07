@@ -1,0 +1,42 @@
+name: Bug report
+description: Report a confusing preview, broken command, or setup problem
+title: "Bug: "
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting this. Please redact secrets, private paths, tokens, and sensitive file contents.
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: What did NotATechBro do that seemed wrong or confusing?
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect?
+    validations:
+      required: true
+  - type: textarea
+    id: payload
+    attributes:
+      label: Command or hook payload
+      description: Paste a safe/redacted command or JSON payload if possible.
+      render: shell
+  - type: input
+    id: version
+    attributes:
+      label: NotATechBro version or commit
+      placeholder: main / commit SHA / package version
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      placeholder: macOS 26, Node 24, Claude Code 2.x, Hermes 0.x, etc.
+  - type: textarea
+    id: extra
+    attributes:
+      label: Extra context
