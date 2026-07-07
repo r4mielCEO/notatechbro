@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>CLI adapters — NotATechBro</title>
+    <meta name="description" content="How NotATechBro connects to Claude Code, Hermes, Codex-style payloads, and generic tool JSON." />
+    <link rel="icon" type="image/png" href="assets/notatechbro-icon.png" />
+    <link rel="apple-touch-icon" href="assets/notatechbro-icon.png" />
+    <link rel="stylesheet" href="assets/docs.css" />
+  </head>
+  <body>
+    <header class="nav">
+      <div class="nav-inner">
+        <a class="brand" href="landing.html"><img src="assets/notatechbro-icon.png" alt="" aria-hidden="true" /><span>NotATechBro</span></a>
+        <div class="nav-actions"><a href="landing.html">Landing</a><a href="quickstart.html">Quickstart</a></div>
+      </div>
+    </header>
+    <main class="doc-shell">
+      <section class="hero">
+        <p class="eyebrow">CLI adapters</p>
+        <h1>One preview engine. Different hook payloads.</h1>
+        <p>Adapters normalize host-specific JSON into the same internal action model, then shared rules write the plain-English preview.</p>
+      </section>
+      <section class="doc-grid">
+        <aside class="card">
+          <h2>Supported today</h2>
+          <ul>
+            <li>Claude Code <code>PreToolUse</code> style payloads</li>
+            <li>Hermes <code>pre_tool_call</code> payloads</li>
+            <li>Codex-style shell/tool call candidates</li>
+            <li>Generic <code>tool_name</code> and <code>tool_input</code> JSON</li>
+          </ul>
+        </aside>
+        <article class="prose">
+          <div class="github-strip"><span>Want the raw config snippets?</span><a class="button" href="https://github.com/r4mielCEO/notatechbro/blob/main/docs/cli-adapters.md">View on GitHub</a></div>
+          <h2>Claude Code</h2>
+          <p>Claude Code command hooks can pipe JSON into <code>change-preview</code>. Human text goes to stderr by default so stdout stays available for host protocols.</p>
+          <pre><code>{
+  "tool_name": "Bash",
+  "tool_input": { "command": "npm install" },
+  "cwd": "/path/to/project"
+}</code></pre>
+          <h2>Hermes</h2>
+          <p>Hermes can call the CLI from a pre-tool hook. The tool stays observer-only and does not block.</p>
+          <pre><code>{
+  "hook_event_name": "pre_tool_call",
+  "tool_name": "terminal",
+  "tool_input": { "command": "git push" }
+}</code></pre>
+          <h2>Codex-style payloads</h2>
+          <p>Codex hook shapes vary by version, so this support is permissive until verified against the exact Codex CLI version you target.</p>
+          <pre><code>{ "tool_call": { "name": "shell", "input": { "command": "pytest" } } }</code></pre>
+        </article>
+      </section>
+    </main>
+    <footer class="footer"><div class="footer-inner">Adapters are intentionally thin. Interpretation belongs in the shared local rule engine.</div></footer>
+  </body>
+</html>

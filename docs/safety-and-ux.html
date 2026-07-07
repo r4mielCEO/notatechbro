@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Safety wording — NotATechBro</title>
+    <meta name="description" content="How NotATechBro explains command risk without pretending to approve or block commands." />
+    <link rel="icon" type="image/png" href="assets/notatechbro-icon.png" />
+    <link rel="apple-touch-icon" href="assets/notatechbro-icon.png" />
+    <link rel="stylesheet" href="assets/docs.css" />
+  </head>
+  <body>
+    <header class="nav">
+      <div class="nav-inner">
+        <a class="brand" href="landing.html"><img src="assets/notatechbro-icon.png" alt="" aria-hidden="true" /><span>NotATechBro</span></a>
+        <div class="nav-actions"><a href="landing.html">Landing</a><a href="architecture.html">Architecture</a></div>
+      </div>
+    </header>
+    <main class="doc-shell">
+      <section class="hero">
+        <p class="eyebrow">Safety wording</p>
+        <h1>Clear language, no fake safety claims.</h1>
+        <p>The goal is to help users understand the action in front of them, not to pretend the tool made a safety decision.</p>
+      </section>
+      <section class="doc-grid">
+        <aside class="card">
+          <h2>Good default</h2>
+          <p>Use one short sentence. Say “will” when the parse is clear. Say “may” when the command is risky or approximate.</p>
+        </aside>
+        <article class="prose">
+          <div class="github-strip"><span>Full wording rules live in the repo.</span><a class="button" href="https://github.com/r4mielCEO/notatechbro/blob/main/docs/safety-and-ux.md">View on GitHub</a></div>
+          <h2>Say what will happen</h2>
+          <pre><code>rm -rf dist
+→ This will delete the `dist` folder.</code></pre>
+          <pre><code>npm install
+→ This will install or update this project's JavaScript packages.</code></pre>
+          <h2>Use caution without panic</h2>
+          <pre><code>git clean -fd
+→ This may permanently delete untracked files from the project.</code></pre>
+          <p>Do not say “this is safe.” NotATechBro is an explanation layer, not a security product.</p>
+          <h2>Keep stdout clean</h2>
+          <p>Human preview text goes to stderr by default. Structured JSON mode is available for host protocols that need stdout.</p>
+        </article>
+      </section>
+    </main>
+    <footer class="footer"><div class="footer-inner">Short, honest wording is the product.</div></footer>
+  </body>
+</html>

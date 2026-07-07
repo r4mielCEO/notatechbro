@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Architecture — NotATechBro</title>
+    <meta name="description" content="The local adapter, normalization, and rule-engine architecture behind NotATechBro." />
+    <link rel="icon" type="image/png" href="assets/notatechbro-icon.png" />
+    <link rel="apple-touch-icon" href="assets/notatechbro-icon.png" />
+    <link rel="stylesheet" href="assets/docs.css" />
+  </head>
+  <body>
+    <header class="nav">
+      <div class="nav-inner">
+        <a class="brand" href="landing.html"><img src="assets/notatechbro-icon.png" alt="" aria-hidden="true" /><span>NotATechBro</span></a>
+        <div class="nav-actions"><a href="landing.html">Landing</a><a href="quickstart.html">Quickstart</a></div>
+      </div>
+    </header>
+    <main class="doc-shell">
+      <section class="hero">
+        <p class="eyebrow">Architecture</p>
+        <h1>Normalize the hook. Explain the action.</h1>
+        <p>The first version is deterministic and local. There is no daemon, database, cloud account, or required LLM.</p>
+      </section>
+      <section class="doc-grid">
+        <aside class="card">
+          <h2>Flow</h2>
+          <p>Hook payload → adapter-compatible normalizer → normalized action → deterministic rule engine → one preview sentence.</p>
+        </aside>
+        <article class="prose">
+          <div class="github-strip"><span>See the source layout and model types in GitHub.</span><a class="button" href="https://github.com/r4mielCEO/notatechbro/blob/main/docs/architecture.md">View on GitHub</a></div>
+          <h2>Core model</h2>
+          <p>Host-specific JSON becomes a <code>NormalizedAction</code>: shell command, file write, file edit, file delete, file read, or unknown tool.</p>
+          <pre><code>Agent CLI hook payload
+        ↓
+NormalizedAction
+        ↓
+Rule engine
+        ↓
+Plain-English preview</code></pre>
+          <h2>Rule engine</h2>
+          <p>The MVP covers common deletes, installs, tests, git commands, output redirection, file writes, file edits, and unknown-command fallbacks.</p>
+          <h2>Privacy posture</h2>
+          <ul>
+            <li>No network calls.</li>
+            <li>No telemetry.</li>
+            <li>No shell execution.</li>
+            <li>No file reads based on hook payload paths.</li>
+          </ul>
+        </article>
+      </section>
+    </main>
+    <footer class="footer"><div class="footer-inner">Deterministic rules first. Optional LLM summaries can wait.</div></footer>
+  </body>
+</html>

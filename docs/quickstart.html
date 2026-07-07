@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Quickstart — NotATechBro</title>
+    <meta name="description" content="Install NotATechBro locally and run the first plain-English command preview." />
+    <link rel="icon" type="image/png" href="assets/notatechbro-icon.png" />
+    <link rel="apple-touch-icon" href="assets/notatechbro-icon.png" />
+    <link rel="stylesheet" href="assets/docs.css" />
+  </head>
+  <body>
+    <header class="nav">
+      <div class="nav-inner">
+        <a class="brand" href="landing.html"><img src="assets/notatechbro-icon.png" alt="" aria-hidden="true" /><span>NotATechBro</span></a>
+        <div class="nav-actions"><a href="landing.html">Landing</a><a href="cli-adapters.html">Adapters</a></div>
+      </div>
+    </header>
+    <main class="doc-shell">
+      <section class="hero">
+        <p class="eyebrow">Quickstart</p>
+        <h1>Install locally. Run one preview.</h1>
+        <p>NotATechBro reads hook JSON from stdin and prints a plain-English explanation before the agent command runs.</p>
+      </section>
+      <section class="doc-grid">
+        <aside class="card">
+          <h2>What you need</h2>
+          <p>A local checkout of the repo and Node/npm. The CLI executable is still named <code>change-preview</code>.</p>
+        </aside>
+        <article class="prose">
+          <div class="github-strip"><span>GitHub is the source of truth for the raw docs.</span><a class="button" href="https://github.com/r4mielCEO/notatechbro/blob/main/README.md">View on GitHub</a></div>
+          <h2>Install from this checkout</h2>
+          <pre><code>npm install
+npm run build
+npm link</code></pre>
+          <h3>Run the first preview</h3>
+          <pre><code>echo '{"tool_name":"Bash","tool_input":{"command":"rm -rf dist"}}' | change-preview</code></pre>
+          <p>Expected preview:</p>
+          <pre><code>This will delete the `dist` folder.</code></pre>
+          <h3>Use JSON mode when a host expects stdout</h3>
+          <pre><code>echo '{"tool_name":"Bash","tool_input":{"command":"git push"}}' | change-preview --json</code></pre>
+          <p>The <code>decision: "allow"</code> field is protocol compatibility only. NotATechBro does not approve, deny, block, or change tool calls.</p>
+        </article>
+      </section>
+    </main>
+    <footer class="footer"><div class="footer-inner">Local by default. No cloud calls, no telemetry, no mandatory LLM.</div></footer>
+  </body>
+</html>

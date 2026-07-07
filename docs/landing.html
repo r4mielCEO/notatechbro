@@ -1,0 +1,1165 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="NotATechBro explains Claude Code, Codex, and Hermes tool calls in plain English before they run."
+    />
+    <title>NotATechBro — Plain-English previews for agentic CLIs</title>
+    <link rel="icon" type="image/png" href="assets/notatechbro-icon.png" />
+    <link rel="apple-touch-icon" href="assets/notatechbro-icon.png" />
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #0b0d16;
+        --bg-2: #101322;
+        --panel: #15192a;
+        --panel-2: #1b2034;
+        --panel-3: #222845;
+        --ink: #f4f2ff;
+        --muted: #aaa8bd;
+        --dim: #8988a6;
+        --line: rgba(244, 242, 255, 0.09);
+        --line-strong: rgba(244, 242, 255, 0.18);
+        --accent: #8ad7ff;
+        --accent-soft: #c7a8ff;
+        --green: #77f5c7;
+        --danger: #ff8a9a;
+        --shadow: 0 24px 80px rgba(0, 0, 0, 0.36);
+        --max: 1240px;
+        --sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        --mono: ui-monospace, "SFMono-Regular", "SF Mono", Consolas, "Liberation Mono", monospace;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+        background: var(--bg);
+      }
+
+      :focus-visible {
+        outline: 3px solid var(--accent);
+        outline-offset: 4px;
+      }
+
+      body {
+        margin: 0;
+        min-width: 320px;
+        color: var(--ink);
+        background:
+          radial-gradient(circle at 68% 14%, rgba(138, 215, 255, 0.14), transparent 30rem),
+          radial-gradient(circle at 6% 42%, rgba(199, 168, 255, 0.1), transparent 34rem),
+          linear-gradient(180deg, #0b0d16 0%, #0f1220 52%, #101322 100%);
+        font-family: var(--sans);
+        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      code,
+      pre,
+      .mono {
+        font-family: var(--mono);
+      }
+
+      .nav {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        background: rgba(11, 13, 22, 0.86);
+        border-bottom: 1px solid var(--line);
+        backdrop-filter: blur(18px);
+      }
+
+      .nav-inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: min(100% - 32px, var(--max));
+        min-height: 58px;
+        margin: 0 auto;
+        gap: 16px;
+      }
+
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 9px;
+        min-height: 44px;
+        color: var(--ink);
+        font-size: 15px;
+        font-weight: 720;
+        letter-spacing: -0.025em;
+      }
+
+      .brand-cube {
+        width: 25px;
+        height: 25px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 7px;
+        object-fit: cover;
+        transform: rotate(-8deg);
+      }
+
+      .nav-links {
+        display: none;
+        align-items: center;
+        gap: 28px;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      .nav-links a:hover,
+      .nav-links a:focus-visible {
+        color: var(--ink);
+      }
+
+      .nav-links a {
+        display: inline-flex;
+        min-height: 44px;
+        align-items: center;
+      }
+
+      .nav-actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .nav-actions .ghost {
+        display: none;
+      }
+
+      .button,
+      button.button {
+        display: inline-flex;
+        min-height: 44px;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid var(--line-strong);
+        border-radius: 999px;
+        padding: 0 16px;
+        color: var(--ink);
+        background: rgba(255, 255, 255, 0.02);
+        font: 640 14px/1 var(--sans);
+        letter-spacing: -0.012em;
+        cursor: pointer;
+        transition:
+          transform 160ms ease,
+          border-color 160ms ease,
+          background 160ms ease,
+          color 160ms ease;
+      }
+
+      .button:hover,
+      .button:focus-visible {
+        transform: translateY(-1px);
+        border-color: rgba(244, 242, 255, 0.34);
+      }
+
+      .button.primary {
+        border-color: var(--ink);
+        color: #0b0d16;
+        background: var(--ink);
+      }
+
+      .button.primary:hover,
+      .button.primary:focus-visible {
+        background: white;
+      }
+
+      .button.command-copy {
+        gap: 9px;
+        min-height: 52px;
+        max-width: 100%;
+        min-width: 0;
+        border-radius: 10px;
+        padding: 0 15px 0 18px;
+        background: rgba(255, 255, 255, 0.04);
+        font-family: var(--mono);
+        font-weight: 520;
+        text-align: left;
+      }
+
+      .copy-dot {
+        display: grid;
+        place-items: center;
+        width: 31px;
+        height: 31px;
+        flex: 0 0 auto;
+        border-radius: 50%;
+        color: #0b0d16;
+        background: var(--ink);
+        font: 900 13px/1 var(--mono);
+      }
+
+      .button[data-copied="true"] .copy-dot {
+        background: var(--green);
+      }
+
+      .hero {
+        width: min(100% - 32px, var(--max));
+        margin: 0 auto;
+        padding: 64px 0 56px;
+      }
+
+      .label {
+        margin: 0 0 16px;
+        color: var(--muted);
+        font: 600 14px/1 var(--sans);
+        letter-spacing: 0.01em;
+      }
+
+      h1 {
+        max-width: 850px;
+        margin: 0;
+        font-size: clamp(3.05rem, 7.25vw, 6.2rem);
+        font-weight: 560;
+        line-height: 1.02;
+        letter-spacing: -0.055em;
+        text-wrap: balance;
+      }
+
+      .muted-title {
+        display: block;
+        color: var(--muted);
+      }
+
+      .hero-sub {
+        max-width: 680px;
+        margin: 24px 0 0;
+        color: var(--muted);
+        font-size: clamp(1.08rem, 2vw, 1.42rem);
+        line-height: 1.42;
+        letter-spacing: -0.03em;
+        text-wrap: pretty;
+      }
+
+      .hero-stage {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 28px;
+        min-width: 0;
+        margin-top: 68px;
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        padding: 18px;
+        background: rgba(255, 255, 255, 0.025);
+        box-shadow: var(--shadow);
+      }
+
+      .stage-copy {
+        display: flex;
+        min-height: 320px;
+        min-width: 0;
+        flex-direction: column;
+        justify-content: center;
+        padding: 2px;
+      }
+
+      .stage-copy h2 {
+        margin: 0;
+        font-size: clamp(1.55rem, 3.7vw, 2.45rem);
+        font-weight: 520;
+        line-height: 1.05;
+        letter-spacing: -0.045em;
+      }
+
+      .stage-copy p {
+        margin: 10px 0 24px;
+        color: var(--muted);
+        font-size: 1.05rem;
+        line-height: 1.48;
+      }
+
+      .command-text {
+        overflow: hidden;
+        min-width: 0;
+        color: #f2f0ff;
+        overflow-wrap: anywhere;
+        text-overflow: clip;
+        white-space: normal;
+      }
+
+      .demo-card {
+        position: relative;
+        min-height: 420px;
+        min-width: 0;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.13);
+        border-radius: 5px;
+        background:
+          linear-gradient(180deg, rgba(255, 255, 255, 0.22), transparent 16%),
+          radial-gradient(circle at 30% 22%, rgba(236, 240, 255, 0.9), rgba(174, 196, 255, 0.45) 22%, transparent 42%),
+          linear-gradient(150deg, #e7efff 0%, #9eb8e8 43%, #344469 47%, #172039 66%, #644c90 82%, #101322 100%);
+      }
+
+      .demo-card::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+          radial-gradient(ellipse at 28% 70%, rgba(248, 244, 223, 0.6), transparent 24%),
+          linear-gradient(180deg, transparent 0 56%, rgba(42, 55, 92, 0.52) 57% 70%, rgba(11, 13, 22, 0.88) 90%),
+          repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.025) 0 1px, transparent 1px 4px);
+        mix-blend-mode: multiply;
+      }
+
+      .demo-card::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(circle at var(--mx, 62%) var(--my, 38%), rgba(255, 255, 255, 0.24), transparent 16rem);
+        opacity: 0.6;
+        pointer-events: none;
+      }
+
+      .permission-prompt {
+        position: absolute;
+        right: min(6vw, 54px);
+        bottom: min(5vw, 42px);
+        left: min(6vw, 54px);
+        z-index: 3;
+        overflow: hidden;
+        border: 1px solid rgba(201, 195, 255, 0.72);
+        border-radius: 8px;
+        background: rgba(12, 12, 15, 0.94);
+        box-shadow: 0 22px 70px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(138, 215, 255, 0.08) inset;
+        color: #f4f2ff;
+        font: 13px/1.35 var(--mono);
+      }
+
+      .permission-inner {
+        padding: 14px 16px 16px;
+      }
+
+      .permission-title {
+        display: block;
+        margin-bottom: 12px;
+        color: #c9c3ff;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+      }
+
+      .permission-command,
+      .permission-summary {
+        display: block;
+        margin-left: 24px;
+        overflow-wrap: anywhere;
+      }
+
+      .permission-command {
+        color: #f0eefb;
+        font-weight: 650;
+      }
+
+      .permission-summary {
+        color: #b8b6c9;
+      }
+
+      .permission-question {
+        margin: 18px 0 4px;
+        font-weight: 650;
+      }
+
+      .permission-options {
+        display: grid;
+        gap: 2px;
+        margin: 0;
+      }
+
+      .permission-options div {
+        display: grid;
+        grid-template-columns: 42px minmax(0, 1fr);
+        gap: 10px;
+        color: #d7d4e8;
+      }
+
+      .permission-options .active {
+        color: #f7f5ff;
+        font-weight: 700;
+      }
+
+      .permission-options .active span:first-child {
+        color: var(--accent);
+      }
+
+      .status-rail {
+        display: grid;
+        grid-template-columns: 1fr;
+        border-top: 1px solid var(--line);
+        border-bottom: 1px solid var(--line);
+      }
+
+      .status-item {
+        padding: 24px 18px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .status-item:last-child {
+        border-bottom: 0;
+      }
+
+      .status-number {
+        display: block;
+        color: var(--ink);
+        font-size: clamp(2rem, 6vw, 3.2rem);
+        font-weight: 540;
+        line-height: 0.9;
+        letter-spacing: -0.06em;
+      }
+
+      .status-label {
+        display: block;
+        max-width: 310px;
+        margin-top: 10px;
+        color: var(--muted);
+        line-height: 1.45;
+      }
+
+      .section {
+        width: min(100% - 32px, var(--max));
+        margin: 0 auto;
+        padding: 88px 0;
+      }
+
+      .section h2 {
+        max-width: 760px;
+        margin: 0;
+        font-size: clamp(2.25rem, 6.5vw, 4.4rem);
+        font-weight: 520;
+        line-height: 1.04;
+        letter-spacing: -0.06em;
+        text-wrap: balance;
+      }
+
+      .section > p {
+        max-width: 660px;
+        margin: 18px 0 0;
+        color: var(--muted);
+        font-size: 1.08rem;
+        line-height: 1.55;
+      }
+
+      .cards {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 10px;
+        margin-top: 34px;
+      }
+
+      .card {
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        background: rgba(255, 255, 255, 0.025);
+      }
+
+      .card-copy {
+        padding: 20px 18px 0;
+      }
+
+      .card h3 {
+        margin: 0;
+        font-size: 1.13rem;
+        font-weight: 560;
+        letter-spacing: -0.025em;
+      }
+
+      .card p {
+        margin: 7px 0 0;
+        color: var(--muted);
+        line-height: 1.45;
+      }
+
+      .mini-demo {
+        height: 270px;
+        margin: 20px 18px 18px;
+        overflow: hidden;
+        border: 1px solid rgba(244, 242, 255, 0.08);
+        border-radius: 4px;
+        background: #0b0d16;
+      }
+
+      .model-list {
+        padding: 24px 18px;
+        font: 13px/1.7 var(--mono);
+      }
+
+      .model-list .active {
+        color: var(--ink);
+      }
+
+      .model-list span {
+        display: block;
+        color: #807e99;
+      }
+
+      .flow-board {
+        display: grid;
+        height: 100%;
+        place-items: center;
+        padding: 22px;
+      }
+
+      .flow-nodes {
+        display: grid;
+        width: 100%;
+        gap: 10px;
+      }
+
+      .flow-node {
+        border: 1px solid rgba(244, 242, 255, 0.12);
+        border-radius: 6px;
+        padding: 12px;
+        color: #ddd9f4;
+        background: rgba(255, 255, 255, 0.025);
+        font: 12px/1.35 var(--mono);
+        opacity: 0.55;
+        transform: translateX(-8px);
+        animation: nodePulse 6s infinite;
+      }
+
+      .flow-node:nth-child(2) {
+        animation-delay: 1.3s;
+      }
+
+      .flow-node:nth-child(3) {
+        animation-delay: 2.6s;
+      }
+
+      @keyframes nodePulse {
+        0%, 16%, 100% {
+          border-color: rgba(244, 242, 255, 0.12);
+          opacity: 0.55;
+          transform: translateX(-8px);
+        }
+        28%, 42% {
+          border-color: rgba(138, 215, 255, 0.72);
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+
+      .automation-view {
+        height: 100%;
+        border-left: 46px solid rgba(244, 242, 255, 0.18);
+        padding: 26px 20px;
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.045), transparent 20%);
+        font: 12px/1.6 var(--mono);
+      }
+
+      .check-line {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        margin: 12px 0;
+      }
+
+      .check {
+        display: grid;
+        place-items: center;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        color: #10100d;
+        background: var(--green);
+        font-size: 11px;
+        font-weight: 900;
+      }
+
+      .script-line {
+        margin-left: 28px;
+        color: #8d8679;
+      }
+
+      .docs-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 10px;
+        margin-top: 34px;
+      }
+
+      .docs-grid .command-copy {
+        width: 100%;
+      }
+
+      .doc-link {
+        display: block;
+        min-height: 132px;
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        padding: 18px;
+        background: rgba(255, 255, 255, 0.025);
+        transition:
+          border-color 160ms ease,
+          background 160ms ease,
+          transform 160ms ease;
+      }
+
+      .doc-link:hover,
+      .doc-link:focus-visible {
+        transform: translateY(-2px);
+        border-color: rgba(138, 215, 255, 0.45);
+        background: rgba(138, 215, 255, 0.045);
+      }
+
+      .doc-link h3 {
+        margin: 0;
+        font-size: 1.05rem;
+        font-weight: 560;
+      }
+
+      .doc-link p {
+        margin: 8px 0 18px;
+        color: var(--muted);
+        line-height: 1.45;
+      }
+
+      .doc-link span {
+        color: var(--accent);
+      }
+
+      .faq {
+        display: grid;
+        gap: 8px;
+        margin-top: 34px;
+      }
+
+      details {
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        background: rgba(255, 255, 255, 0.025);
+      }
+
+      summary {
+        min-height: 58px;
+        padding: 18px;
+        cursor: pointer;
+        font-weight: 560;
+        letter-spacing: -0.02em;
+        list-style: none;
+      }
+
+      summary::-webkit-details-marker {
+        display: none;
+      }
+
+      summary::after {
+        content: "+";
+        float: right;
+        color: var(--accent);
+        font-family: var(--mono);
+      }
+
+      details[open] summary::after {
+        content: "−";
+      }
+
+      details p {
+        margin: 0;
+        border-top: 1px solid var(--line);
+        padding: 18px 18px 20px;
+        color: var(--muted);
+        line-height: 1.55;
+      }
+
+      .final {
+        display: grid;
+        min-height: 520px;
+        place-items: center;
+        width: min(100% - 32px, var(--max));
+        margin: 0 auto;
+        padding: 90px 0;
+        text-align: center;
+      }
+
+      .final h2 {
+        margin: 0;
+        font-size: clamp(3.2rem, 9vw, 7.2rem);
+        font-weight: 520;
+        line-height: 1.02;
+        letter-spacing: -0.075em;
+      }
+
+      .final > div {
+        width: 100%;
+        max-width: 860px;
+        min-width: 0;
+      }
+
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+      }
+
+      .final p {
+        max-width: 580px;
+        margin: 20px auto 24px;
+        color: var(--muted);
+        font-size: 1.08rem;
+        line-height: 1.5;
+      }
+
+      .final .command-copy {
+        width: 100%;
+      }
+
+      .footer {
+        border-top: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.025);
+      }
+
+      .footer-inner {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 28px;
+        width: min(100% - 32px, var(--max));
+        margin: 0 auto;
+        padding: 48px 0;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      .footer strong {
+        display: block;
+        margin-bottom: 8px;
+        color: var(--ink);
+      }
+
+      @media (min-width: 720px) {
+        .nav-links,
+        .nav-actions .ghost {
+          display: flex;
+        }
+
+        .hero {
+          padding-top: 78px;
+        }
+
+        .hero-stage {
+          grid-template-columns: 0.42fr 0.58fr;
+          min-height: 540px;
+          padding: 18px;
+        }
+
+        .stage-copy {
+          padding: 20px;
+        }
+
+        .demo-card {
+          min-height: 500px;
+        }
+
+        .status-rail {
+          grid-template-columns: repeat(3, 1fr);
+        }
+
+        .status-item {
+          border-right: 1px solid var(--line);
+          border-bottom: 0;
+          padding: 30px 20px;
+        }
+
+        .status-item:last-child {
+          border-right: 0;
+        }
+
+        .cards {
+          grid-template-columns: repeat(3, 1fr);
+        }
+
+        .docs-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .footer-inner {
+          grid-template-columns: 1.3fr repeat(3, 1fr);
+        }
+      }
+
+      @media (max-width: 540px) {
+        .brand span:last-child {
+          max-width: 128px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        .nav-actions .button.primary {
+          padding-inline: 12px;
+        }
+
+        .permission-prompt {
+          right: 14px;
+          bottom: 16px;
+          left: 14px;
+          font-size: 11px;
+        }
+
+        .permission-inner {
+          padding: 12px;
+        }
+
+        .permission-command,
+        .permission-summary {
+          margin-left: 12px;
+        }
+
+        .hero-stage {
+          margin-top: 42px;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          scroll-behavior: auto !important;
+          transition-duration: 0.01ms !important;
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="nav" aria-label="Primary navigation">
+      <div class="nav-inner">
+        <a class="brand" href="#top" aria-label="NotATechBro home">
+          <img class="brand-cube" src="assets/notatechbro-icon.png" alt="" aria-hidden="true" />
+          <span>NotATechBro</span>
+        </a>
+        <nav class="nav-links" aria-label="Page sections">
+          <a href="#features">Product</a>
+          <a href="#install">Install</a>
+          <a href="#faq">FAQ</a>
+        </nav>
+        <div class="nav-actions">
+          <a class="button ghost" href="quickstart.html">Docs</a>
+          <a class="button primary" href="#install">Install</a>
+        </div>
+      </div>
+    </header>
+
+    <main id="top">
+      <section class="hero" aria-labelledby="hero-title">
+        <p class="label">CLI</p>
+        <h1 id="hero-title">Explain agent actions. <span class="muted-title">Before they run.</span></h1>
+        <p class="hero-sub">
+          NotATechBro shows a plain-English preview whenever Claude Code, Codex, or Hermes asks to run a command.
+        </p>
+
+        <div class="hero-stage" aria-label="Interactive CLI preview demo">
+          <div class="stage-copy">
+            <h2>Know what the agent is asking for.</h2>
+            <p>When an agent asks for permission, NotATechBro explains the command before you choose yes or no.</p>
+            <button class="button command-copy" type="button" data-copy="npm install && npm run build && npm link" aria-label="Copy install command">
+              <span class="command-text">npm install && npm run build && npm link</span>
+              <span class="copy-dot" aria-hidden="true">⧉</span>
+            </button>
+          </div>
+
+          <div class="demo-card" id="demo-card">
+            <div class="permission-prompt" aria-label="Example agent permission prompt">
+              <div class="permission-inner" id="permission-body" aria-hidden="true"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="status-rail" aria-label="Project proof points">
+        <div class="status-item">
+          <span class="status-number">3</span>
+          <span class="status-label">Agent CLI families: Claude Code, Codex-style payloads, and Hermes.</span>
+        </div>
+        <div class="status-item">
+          <span class="status-number">0</span>
+          <span class="status-label">Cloud calls, telemetry, accounts, or mandatory LLMs at runtime.</span>
+        </div>
+        <div class="status-item">
+          <span class="status-number">22</span>
+          <span class="status-label">Tests covering shell rules, file rules, adapters, CLI output, and malformed JSON.</span>
+        </div>
+      </section>
+
+      <section class="section" id="features" aria-labelledby="features-title">
+        <p class="label">Product</p>
+        <h2 id="features-title">Built for the moment before “approve”.</h2>
+        <p>
+          New agentic coding users do not need a shell lesson. They need to know what the agent is about to do.
+        </p>
+
+        <div class="cards">
+          <article class="card">
+            <div class="card-copy">
+              <h3>Impact in one sentence</h3>
+              <p>Deletes, installs, tests, git commands, file writes, and edits become short plain-English previews.</p>
+            </div>
+            <div class="mini-demo model-list" aria-hidden="true">
+              <span>$ rm -rf dist</span>
+              <span class="active">This will delete the `dist` folder.</span>
+              <br />
+              <span>$ git clean -fd</span>
+              <span class="active">This may permanently delete untracked files.</span>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="card-copy">
+              <h3>Works across agent hooks</h3>
+              <p>Small adapters accept common Claude Code, Hermes, and Codex-style payloads. The rules stay local and easy to inspect.</p>
+            </div>
+            <div class="mini-demo flow-board" aria-hidden="true">
+              <div class="flow-nodes">
+                <div class="flow-node">hook payload</div>
+                <div class="flow-node">NormalizedAction</div>
+                <div class="flow-node">plain-English preview</div>
+              </div>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="card-copy">
+              <h3>Explanations, not false confidence</h3>
+              <p>NotATechBro explains only. It does not claim a command is safe, and it keeps hook output separate from human text.</p>
+            </div>
+            <div class="mini-demo automation-view" aria-hidden="true">
+              <div class="check-line"><span class="check">✓</span><span>stderr preview</span></div>
+              <div class="script-line">stdout stays protocol-safe</div>
+              <div class="check-line"><span class="check">✓</span><span>local rules</span></div>
+              <div class="script-line">no network at runtime</div>
+              <div class="check-line"><span class="check">✓</span><span>honest fallbacks</span></div>
+              <div class="script-line">“may” when approximate</div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="install" aria-labelledby="install-title">
+        <p class="label">Install</p>
+        <h2 id="install-title">Start with one local install.</h2>
+        <p>
+          Install the CLI, run a sample payload, then wire it into your agent's pre-tool hook.
+        </p>
+        <div class="docs-grid">
+          <button class="button command-copy" type="button" data-copy="npm install && npm run build && npm link" aria-label="Copy install command">
+            <span class="command-text">npm install && npm run build && npm link</span>
+            <span class="copy-dot" aria-hidden="true">⧉</span>
+          </button>
+          <button class="button command-copy" type="button" data-copy="echo '{&quot;tool_name&quot;:&quot;Bash&quot;,&quot;tool_input&quot;:{&quot;command&quot;:&quot;rm -rf dist&quot;}}' | change-preview" aria-label="Copy sample payload command">
+            <span class="command-text">echo '{"tool_name":"Bash","tool_input":{"command":"rm -rf dist"}}' | change-preview</span>
+            <span class="copy-dot" aria-hidden="true">⧉</span>
+          </button>
+        </div>
+      </section>
+
+      <section class="section" aria-labelledby="learn-title">
+        <p class="label">Learn more</p>
+        <h2 id="learn-title">Docs for setting it up without guessing.</h2>
+        <div class="docs-grid">
+          <a class="doc-link" href="quickstart.html">
+            <h3>Quickstart</h3>
+            <p>Install the CLI and run the first preview payload.</p>
+            <span>Read quickstart →</span>
+          </a>
+          <a class="doc-link" href="cli-adapters.html">
+            <h3>CLI adapters</h3>
+            <p>Claude Code, Hermes, Codex-style payloads, and generic tool JSON.</p>
+            <span>View adapters →</span>
+          </a>
+          <a class="doc-link" href="safety-and-ux.html">
+            <h3>Safety wording</h3>
+            <p>Explain risk without pretending to approve commands.</p>
+            <span>Review language →</span>
+          </a>
+          <a class="doc-link" href="architecture.html">
+            <h3>Architecture</h3>
+            <p>Hook payload, normalizer, action model, rule engine, preview.</p>
+            <span>See architecture →</span>
+          </a>
+        </div>
+      </section>
+
+      <section class="section" id="faq" aria-labelledby="faq-title">
+        <p class="label">FAQ</p>
+        <h2 id="faq-title">Questions before you wire it into your agent.</h2>
+        <div class="faq">
+          <details open>
+            <summary>Does it block dangerous commands?</summary>
+            <p>No. This version explains what is likely to happen. It does not approve, deny, block, or change tool calls.</p>
+          </details>
+          <details>
+            <summary>Does it send commands or paths to a server?</summary>
+            <p>No. It runs locally and uses deterministic rules. There are no runtime LLM calls, cloud calls, accounts, or telemetry.</p>
+          </details>
+          <details>
+            <summary>What will I see before a command runs?</summary>
+            <p>You see the command type, the command itself, and a short explanation of what it is likely to do. Then your agent still asks you to choose yes or no.</p>
+          </details>
+          <details>
+            <summary>Who is this for?</summary>
+            <p>It is for people using agentic coding tools who want plain English before they approve a command, especially if shell syntax feels unfamiliar.</p>
+          </details>
+          <details>
+            <summary>Is Codex fully verified?</summary>
+            <p>Codex-style payloads are supported, but the exact hook config should be checked against the Codex CLI version you use.</p>
+          </details>
+        </div>
+      </section>
+
+      <section class="final" aria-labelledby="final-title">
+        <div>
+          <h2 id="final-title">Try NotATechBro.</h2>
+          <p>Give new agentic coding users a clearer moment before the agent runs a command.</p>
+          <button class="button command-copy" type="button" data-copy="echo '{&quot;tool_name&quot;:&quot;Bash&quot;,&quot;tool_input&quot;:{&quot;command&quot;:&quot;git push&quot;}}' | change-preview --json" aria-label="Copy JSON mode example command">
+            <span class="command-text">echo '{"tool_name":"Bash","tool_input":{"command":"git push"}}' | change-preview --json</span>
+            <span class="copy-dot" aria-hidden="true">⧉</span>
+          </button>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        <div>
+          <strong>Value proposition</strong>
+          <span>NotATechBro helps non-technical users understand agent CLI actions before they run.</span>
+        </div>
+        <div><strong>Product</strong><span>Local CLI<br />Deterministic rules<br />Works with adapters</span></div>
+        <div><strong>Integrations</strong><span>Claude Code<br />Hermes<br />Codex-style payloads</span></div>
+        <div><strong>Runtime</strong><span>No cloud<br />No telemetry<br />No mandatory LLM</span></div>
+      </div>
+    </footer>
+
+    <div class="sr-only" id="copy-status" role="status" aria-live="polite"></div>
+
+    <script>
+      const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const permissionBody = document.querySelector("#permission-body");
+      const demoCard = document.querySelector("#demo-card");
+      const copyStatus = document.querySelector("#copy-status");
+
+      const frames = [
+        {
+          permissionType: "Bash command",
+          permissionCommand: "rm -rf dist",
+          permissionSummary: "Delete the dist build folder",
+          permissionAgain: "rm commands in this project",
+        },
+        {
+          permissionType: "Terminal command",
+          permissionCommand: "npm install zod",
+          permissionSummary: "Install the zod JavaScript package",
+          permissionAgain: "npm install commands in this repo",
+        },
+        {
+          permissionType: "Shell command",
+          permissionCommand: "git clean -fd",
+          permissionSummary: "Remove untracked files from the project",
+          permissionAgain: "git clean commands here",
+        },
+      ];
+
+      let activeFrame = 0;
+      let activeOption = 0;
+      let lastOptionTick = 0;
+
+      function renderPermission(frame, selectedIndex = 0) {
+        if (!permissionBody) return;
+        const options = [
+          "Yes",
+          `Yes, and don't ask again for ${frame.permissionAgain}`,
+          "No, and tell the agent what to do differently (esc)",
+        ];
+        permissionBody.innerHTML = `
+          <span class="permission-title">${escapeHtml(frame.permissionType)}</span>
+          <span class="permission-command">${escapeHtml(frame.permissionCommand)}</span>
+          <span class="permission-summary">${escapeHtml(frame.permissionSummary)}</span>
+          <div class="permission-question">Do you want to proceed?</div>
+          <div class="permission-options">
+            ${options
+              .map(
+                (option, index) => `<div class="${index === selectedIndex ? "active" : ""}"><span>${index === selectedIndex ? "› " : ""}${index + 1}.</span><span>${escapeHtml(option)}</span></div>`,
+              )
+              .join("")}
+          </div>
+        `;
+      }
+
+      function animatePermission(now) {
+        if (now - lastOptionTick > 820) {
+          activeOption += 1;
+          if (activeOption > 2) {
+            activeOption = 0;
+            activeFrame = (activeFrame + 1) % frames.length;
+          }
+          renderPermission(frames[activeFrame], activeOption);
+          lastOptionTick = now;
+        }
+        requestAnimationFrame(animatePermission);
+      }
+
+      function escapeHtml(value) {
+        return String(value).replace(/[&<>'"]/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" })[char]);
+      }
+
+      renderPermission(frames[0], 0);
+      if (!reducedMotion) requestAnimationFrame(animatePermission);
+
+      if (demoCard && !reducedMotion) {
+        demoCard.addEventListener("pointermove", (event) => {
+          const rect = demoCard.getBoundingClientRect();
+          const x = ((event.clientX - rect.left) / rect.width) * 100;
+          const y = ((event.clientY - rect.top) / rect.height) * 100;
+          demoCard.style.setProperty("--mx", `${x}%`);
+          demoCard.style.setProperty("--my", `${y}%`);
+        });
+      }
+
+      document.querySelectorAll("[data-copy]").forEach((button) => {
+        button.addEventListener("click", async () => {
+          const text = button.getAttribute("data-copy") || "";
+          const label = button.querySelector(".command-text") || button;
+          const previous = label.textContent;
+          try {
+            await navigator.clipboard.writeText(text);
+            button.setAttribute("data-copied", "true");
+            label.textContent = "Copied";
+            if (copyStatus) copyStatus.textContent = `${button.getAttribute("aria-label") || "Command"} copied.`;
+          } catch {
+            label.textContent = "Copy manually";
+            if (copyStatus) copyStatus.textContent = "Copy failed. Copy the visible command manually.";
+          }
+          window.setTimeout(() => {
+            label.textContent = previous;
+            button.removeAttribute("data-copied");
+          }, 1500);
+        });
+      });
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key !== "Escape") return;
+        const active = document.activeElement;
+        if (active && active.tagName === "SUMMARY") {
+          const parent = active.closest("details");
+          if (parent?.open) parent.open = false;
+        }
+        if (active instanceof HTMLElement) active.blur();
+      });
+    </script>
+  </body>
+</html>

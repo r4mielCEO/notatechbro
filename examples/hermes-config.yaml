@@ -1,0 +1,7 @@
+# Hermes shell hook example for observer-only previews.
+# Verify exact config placement against your installed Hermes version.
+
+hooks:
+  pre_tool_call:
+    - command: "change-preview"
+      matcher: "terminal|bash|shell|write_file|read_file|patch"

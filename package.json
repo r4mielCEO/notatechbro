@@ -1,0 +1,36 @@
+{
+  "name": "notatechbro",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Plain-English command previews for agentic CLIs before they run.",
+  "type": "module",
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
+  "exports": {
+    ".": "./dist/src/index.js"
+  },
+  "bin": {
+    "change-preview": "dist/src/cli.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "docs",
+    "examples"
+  ],
+  "scripts": {
+    "dev": "tsx src/cli.ts",
+    "test": "vitest run",
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@types/node": "^26.1.0",
+    "tsx": "^4.23.0",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.10"
+  }
+}

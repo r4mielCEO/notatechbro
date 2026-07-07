@@ -1,0 +1,8 @@
+# Experimental placeholder. Verify against the Codex CLI version being targeted.
+# The MVP parser supports candidate `tool_name: "shell"` and `tool_call.name: "shell"` payloads.
+
+[[hooks.pre_tool_call]]
+command = "change-preview"
+
+# If the host requires JSON hook responses on stdout, use:
+# command = "change-preview --json"
