@@ -9,6 +9,8 @@
 </p>
 
 <p align="center">
+  <a href="https://r4mielceo.github.io/notatechbro/">Website</a>
+  ·
   <a href="docs/quickstart.html">Quickstart</a>
   · <a href="docs/cli-adapters.html">Adapters</a>
   · <a href="docs/safety-and-ux.html">Safety wording</a>
