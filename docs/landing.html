@@ -507,7 +507,7 @@
 
       .flow-board {
         display: grid;
-        height: 100%;
+        box-sizing: border-box;
         place-items: center;
         padding: 22px;
       }
@@ -525,9 +525,16 @@
         color: #ddd9f4;
         background: rgba(255, 255, 255, 0.025);
         font: 12px/1.35 var(--mono);
+        text-align: center;
         opacity: 0.55;
         transform: translateX(-8px);
         animation: nodePulse 6s infinite;
+      }
+
+      .card:nth-child(2) .card-copy {
+        max-width: 520px;
+        margin: 0 auto;
+        text-align: center;
       }
 
       .flow-node:nth-child(2) {
@@ -552,9 +559,10 @@
       }
 
       .automation-view {
-        height: 100%;
-        border-left: 46px solid rgba(244, 242, 255, 0.18);
-        padding: 26px 20px;
+        display: grid;
+        align-content: center;
+        box-sizing: border-box;
+        padding: 26px 34px;
         background: linear-gradient(180deg, rgba(255, 255, 255, 0.045), transparent 20%);
         font: 12px/1.6 var(--mono);
       }
