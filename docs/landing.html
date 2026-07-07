@@ -325,10 +325,11 @@
 
       .permission-prompt {
         position: absolute;
-        right: min(6vw, 54px);
-        bottom: min(5vw, 42px);
-        left: min(6vw, 54px);
+        top: 50%;
+        left: 50%;
         z-index: 3;
+        width: min(calc(100% - 108px), 720px);
+        transform: translate(-50%, -50%);
         overflow: hidden;
         border: 1px solid rgba(201, 195, 255, 0.72);
         border-radius: 8px;
@@ -804,9 +805,7 @@
         }
 
         .permission-prompt {
-          right: 14px;
-          bottom: 16px;
-          left: 14px;
+          width: calc(100% - 28px);
           font-size: 11px;
         }
 
