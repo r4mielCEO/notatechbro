@@ -7,6 +7,10 @@
 <p align="center">
   Plain-English previews for agentic CLI commands before they run.
 </p>
+<p align="center">
+  <a href="https://github.com/r4mielCEO/notatechbro/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/r4mielCEO/notatechbro/actions/workflows/ci.yml/badge.svg" /></a>
+  <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-f4f2ff.svg" /></a>
+</p>
 
 <p align="center">
   <a href="https://r4mielceo.github.io/notatechbro/">Website</a>
@@ -35,7 +39,7 @@ it prints this:
 This will delete the `dist` folder.
 ```
 
-The executable is still named `change-preview` so hook config stays short.
+The primary executable is `notatechbro`. The older `change-preview` command remains available as a backwards-compatible alias.
 
 ## Why it exists
 
@@ -70,7 +74,15 @@ npm run build
 npm link
 ```
 
+If your shell cannot find `notatechbro` after linking, add npm's global bin directory to `PATH` for that shell.
+
 Then test the executable:
+
+```bash
+echo '{"tool_name":"Bash","tool_input":{"command":"rm -rf dist"}}' | notatechbro
+```
+
+Backwards-compatible alias:
 
 ```bash
 echo '{"tool_name":"Bash","tool_input":{"command":"rm -rf dist"}}' | change-preview
@@ -93,7 +105,7 @@ echo '{"tool_name":"Bash","tool_input":{"command":"npm install"}}' | npm run dev
 Some hook systems expect structured stdout. Use `--json`:
 
 ```bash
-echo '{"tool_name":"Bash","tool_input":{"command":"git push"}}' | change-preview --json
+echo '{"tool_name":"Bash","tool_input":{"command":"git push"}}' | notatechbro --json
 ```
 
 Output:
@@ -109,19 +121,19 @@ Output:
 Suppress low-value read-only previews:
 
 ```bash
-echo '{"tool_name":"read_file","tool_input":{"path":"README.md"}}' | change-preview --quiet
+echo '{"tool_name":"read_file","tool_input":{"path":"README.md"}}' | notatechbro --quiet
 ```
 
 ## Examples
 
 ```bash
-echo '{"tool_name":"Bash","tool_input":{"command":"rm -rf build && npm install"}}' | change-preview
+echo '{"tool_name":"Bash","tool_input":{"command":"rm -rf build && npm install"}}' | notatechbro
 # This will delete the `build` folder, then install or update this project's JavaScript packages.
 
-echo '{"hook_event_name":"pre_tool_call","tool_name":"terminal","tool_input":{"command":"git clean -fd"}}' | change-preview
+echo '{"hook_event_name":"pre_tool_call","tool_name":"terminal","tool_input":{"command":"git clean -fd"}}' | notatechbro
 # This may permanently delete untracked files from the project.
 
-echo '{"tool_name":"Write","tool_input":{"file_path":"src/app.ts"}}' | change-preview
+echo '{"tool_name":"Write","tool_input":{"file_path":"src/app.ts"}}' | notatechbro
 # This will write or overwrite `src/app.ts`.
 ```
 

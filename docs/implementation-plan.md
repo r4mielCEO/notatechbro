@@ -4,12 +4,12 @@
 
 Decide the first package shape:
 
-- Recommended: npm package named `agentic-cli-change-preview` with bin `change-preview`.
+- Recommended: npm package named `notatechbro` with bin `notatechbro` and backwards-compatible alias `change-preview`.
 - Keep the core library separate from CLI glue internally.
 
 Definition of done:
 
-- `change-preview` can be run locally and accepts JSON on stdin.
+- `notatechbro` can be run locally and accepts JSON on stdin.
 
 ## Phase 1 — Project setup
 
@@ -32,7 +32,8 @@ Add scripts:
     "typecheck": "tsc --noEmit"
   },
   "bin": {
-    "change-preview": "dist/cli.js"
+    "notatechbro": "dist/src/cli.js",
+    "change-preview": "dist/src/cli.js"
   }
 }
 ```

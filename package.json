@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "description": "Plain-English command previews for agentic CLIs before they run.",
+  "license": "MIT",
   "type": "module",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
@@ -10,6 +11,7 @@
     ".": "./dist/src/index.js"
   },
   "bin": {
+    "notatechbro": "dist/src/cli.js",
     "change-preview": "dist/src/cli.js"
   },
   "files": [

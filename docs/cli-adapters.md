@@ -6,7 +6,7 @@ Human preview text should go to stderr by default. Stdout is reserved for host p
 
 ## Claude Code
 
-Claude Code command hooks such as `PreToolUse` receive JSON on stdin. Because stdout can be used by hook protocols for decisions, `change-preview` prints the normal human sentence to stderr by default.
+Claude Code command hooks such as `PreToolUse` receive JSON on stdin. Because stdout can be used by hook protocols for decisions, `notatechbro` prints the normal human sentence to stderr by default.
 
 Example `.claude/settings.json` snippet:
 
@@ -19,7 +19,7 @@ Example `.claude/settings.json` snippet:
         "hooks": [
           {
             "type": "command",
-            "command": "change-preview"
+            "command": "notatechbro"
           }
         ]
       }
@@ -47,14 +47,14 @@ Supported Claude tool names:
 
 ## Hermes CLI
 
-Hermes shell hooks can call `change-preview` from `pre_tool_call`. The MVP should remain observer-only: it explains but does not block.
+Hermes shell hooks can call `notatechbro` from `pre_tool_call`. The MVP should remain observer-only: it explains but does not block.
 
 Example config snippet:
 
 ```yaml
 hooks:
   pre_tool_call:
-    - command: "change-preview"
+    - command: "notatechbro"
       matcher: "terminal|bash|shell|write_file|read_file|patch"
 ```
 
@@ -102,14 +102,14 @@ Possible config pattern, to verify for the target Codex version:
 
 ```toml
 [[hooks.pre_tool_call]]
-command = "change-preview"
+command = "notatechbro"
 ```
 
 If the host requires JSON stdout:
 
 ```toml
 [[hooks.pre_tool_call]]
-command = "change-preview --json"
+command = "notatechbro --json"
 ```
 
 ## Adapter implementation rules

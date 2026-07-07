@@ -3,5 +3,5 @@
 
 hooks:
   pre_tool_call:
-    - command: "change-preview"
+    - command: "notatechbro"
       matcher: "terminal|bash|shell|write_file|read_file|patch"

@@ -6,7 +6,27 @@ Current local CLI versions checked on 2026-07-07:
 - Codex CLI: `0.134.0`
 - Hermes Agent: `0.18.0`
 
-## What is verified in this checkpoint
+## Command verification
+
+The package now exposes two bin names that point at the same local CLI entrypoint:
+
+- Primary: `notatechbro`
+- Backwards-compatible alias: `change-preview`
+
+Verified after `npm run build` and `npm link` with the npm global bin directory on `PATH`:
+
+```bash
+echo '{"tool_name":"Bash","tool_input":{"command":"rm -rf dist"}}' | notatechbro
+# This will delete the `dist` folder.
+
+echo '{"tool_name":"Bash","tool_input":{"command":"rm -rf dist"}}' | change-preview
+# This will delete the `dist` folder.
+
+echo '{"tool_name":"Bash","tool_input":{"command":"git push"}}' | notatechbro --json
+# {"decision":"allow","preview":"This will upload your local commits to the remote repository.","confidence":"high","risk":"medium"}
+```
+
+## Adapter payload smoke tests
 
 The shared adapter normalizer and CLI executable were smoke-tested with representative payloads for each host family.
 
@@ -24,6 +44,12 @@ Output on stderr:
 This will delete the `dist` folder.
 ```
 
+Claude Code local evidence:
+
+- `claude --version` returns `2.1.159 (Claude Code)`.
+- `claude --help` includes hook-related flags such as `--include-hook-events`, `--debug ... hooks`, `--settings`, and settings-source controls.
+- The documented `.claude/settings.json` `PreToolUse` command hook shape remains the integration target.
+
 ### Hermes-style payload
 
 Input:
@@ -37,6 +63,12 @@ Output on stderr:
 ```text
 This may permanently delete untracked files from the project.
 ```
+
+Hermes local evidence:
+
+- `hermes --version` returns `Hermes Agent v0.18.0`.
+- `hermes hooks --help` confirms hook management commands: `list`, `test`, `doctor`, and allowlist management.
+- Hermes can test configured hooks against synthetic payloads, which is the next step once a project hook is installed in the user's Hermes config.
 
 ### Codex-style candidate payload
 
@@ -52,14 +84,19 @@ Output on stderr:
 This will run Python tests.
 ```
 
-## What still needs real host verification
+Codex local evidence:
 
-These smoke tests verify the NotATechBro parser and CLI behavior against representative payloads. They do not prove every live host hook contract is stable.
+- `codex --version` returns `codex-cli 0.134.0`.
+- `codex --help` includes hook-related trust controls such as `--dangerously-bypass-hook-trust` and config overrides.
+- `codex doctor` passes overall (`0 fail`) for the local installation.
+- The exact Codex hook config contract should still be verified against the target Codex version before claiming full support, because Codex hook shapes vary by release.
 
-Before calling an integration fully verified, test inside the target host CLI with its actual hook config and a safe command such as `pwd` or `npm test`.
+## Current status
 
-Known status:
+- Claude Code: installed locally; representative `PreToolUse` payload passes; docs now use `notatechbro`.
+- Hermes: installed locally; representative `pre_tool_call` payload passes; `hermes hooks` subcommands are available for a configured-hook test.
+- Codex: installed locally and healthy; candidate `tool_call.name = shell` payload passes; config remains marked experimental until verified against the exact target Codex hook contract.
 
-- Claude Code: CLI installed locally; representative `PreToolUse` payload shape passes.
-- Hermes: CLI installed locally; representative `pre_tool_call` payload shape passes.
-- Codex: CLI installed locally; candidate `tool_call.name = shell` payload passes, but Codex hook config/contract should still be checked against the exact target version before claiming full support.
+## Next verification step
+
+Install the project hook config in each host CLI and run a safe command such as `pwd` or `npm test`. Record the actual payload emitted by the host and add it to the adapter tests before calling that host fully verified.
