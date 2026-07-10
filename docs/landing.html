@@ -345,30 +345,49 @@
 
       .permission-title {
         display: block;
-        margin-bottom: 12px;
+        margin-bottom: 7px;
         color: #c9c3ff;
         font-weight: 700;
         letter-spacing: -0.02em;
       }
 
-      .permission-command,
-      .permission-summary {
-        display: block;
-        margin-left: 24px;
-        overflow-wrap: anywhere;
-      }
-
       .permission-command {
+        display: block;
+        margin: 0 0 12px 14px;
+        overflow-wrap: anywhere;
         color: #f0eefb;
         font-weight: 650;
       }
 
+      .permission-command::before {
+        content: "$ ";
+        color: #8ad7ff;
+      }
+
+      .permission-preview {
+        display: grid;
+        gap: 3px;
+        margin: 0 0 15px;
+        padding: 8px 10px;
+        border-left: 2px solid #8ad7ff;
+        background: rgba(138, 215, 255, 0.07);
+      }
+
+      .permission-preview-label {
+        color: #8ad7ff;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+
       .permission-summary {
         color: #b8b6c9;
+        overflow-wrap: anywhere;
       }
 
       .permission-question {
-        margin: 18px 0 4px;
+        margin: 0 0 10px;
         font-weight: 650;
       }
 
@@ -826,8 +845,7 @@
           padding: 12px;
         }
 
-        .permission-command,
-        .permission-summary {
+        .permission-command {
           margin-left: 12px;
         }
 
@@ -903,7 +921,7 @@
           <span class="status-label">Cloud calls, telemetry, accounts, or mandatory LLMs at runtime.</span>
         </div>
         <div class="status-item">
-          <span class="status-number">22</span>
+          <span class="status-number">29</span>
           <span class="status-label">Tests covering shell rules, file rules, adapters, CLI output, and malformed JSON.</span>
         </div>
       </section>
@@ -1067,22 +1085,22 @@
 
       const frames = [
         {
-          permissionType: "Bash command",
+          permissionType: "Codex command approval",
           permissionCommand: "rm -rf dist",
-          permissionSummary: "Delete the dist build folder",
-          permissionAgain: "rm commands in this project",
+          permissionSummary: "This will delete the `dist` folder.",
+          permissionPrefix: "rm",
         },
         {
-          permissionType: "Terminal command",
+          permissionType: "Codex command approval",
           permissionCommand: "npm install zod",
-          permissionSummary: "Install the zod JavaScript package",
-          permissionAgain: "npm install commands in this repo",
+          permissionSummary: "This will install the `zod` JavaScript package.",
+          permissionPrefix: "npm install",
         },
         {
-          permissionType: "Shell command",
+          permissionType: "Codex command approval",
           permissionCommand: "git clean -fd",
-          permissionSummary: "Remove untracked files from the project",
-          permissionAgain: "git clean commands here",
+          permissionSummary: "This may permanently delete untracked files from the project.",
+          permissionPrefix: "git clean",
         },
       ];
 
@@ -1093,15 +1111,18 @@
       function renderPermission(frame, selectedIndex = 0) {
         if (!permissionBody) return;
         const options = [
-          "Yes",
-          `Yes, and don't ask again for ${frame.permissionAgain}`,
-          "No, and tell the agent what to do differently (esc)",
+          "Yes, proceed (y)",
+          `Yes, and don't ask again for commands that start with \`${frame.permissionPrefix}\` (p)`,
+          "No, and tell Codex what to do differently (esc)",
         ];
         permissionBody.innerHTML = `
           <span class="permission-title">${escapeHtml(frame.permissionType)}</span>
+          <div class="permission-question">Would you like to run the following command?</div>
           <span class="permission-command">${escapeHtml(frame.permissionCommand)}</span>
-          <span class="permission-summary">${escapeHtml(frame.permissionSummary)}</span>
-          <div class="permission-question">Do you want to proceed?</div>
+          <div class="permission-preview">
+            <span class="permission-preview-label">NotATechBro preview</span>
+            <span class="permission-summary">${escapeHtml(frame.permissionSummary)}</span>
+          </div>
           <div class="permission-options">
             ${options
               .map(
@@ -1113,7 +1134,7 @@
       }
 
       function animatePermission(now) {
-        if (now - lastOptionTick > 820) {
+        if (now - lastOptionTick > 1200) {
           activeOption += 1;
           if (activeOption > 2) {
             activeOption = 0;
