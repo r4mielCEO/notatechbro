@@ -25,6 +25,20 @@ async function runCli(args: string[], stdin: string) {
 }
 
 describe("CLI", () => {
+  it("provides help, version, and a first-run installation check without stdin", async () => {
+    const help = await runCli(["--help"], "");
+    expect(help.code).toBe(0);
+    expect(help.stdout).toContain("Usage:");
+    expect(help.stdout).toContain("notatechbro --check");
+
+    const version = await runCli(["--version"], "");
+    expect(version.stdout.trim()).toBe("0.1.0");
+
+    const check = await runCli(["--check"], "");
+    expect(check.code).toBe(0);
+    expect(check.stdout).toContain("NotATechBro 0.1.0 is installed and ready.");
+  });
+
   it("prints human previews to stderr by default", async () => {
     const result = await runCli([], JSON.stringify({ tool_name: "Bash", tool_input: { command: "rm -rf dist" } }));
     expect(result.code).toBe(0);
@@ -37,10 +51,10 @@ describe("CLI", () => {
     expect(result.code).toBe(0);
     expect(result.stderr).toBe("");
     expect(JSON.parse(result.stdout)).toMatchObject({
-      decision: "allow",
       preview: "This will upload your local commits to the remote repository.",
       risk: "medium",
     });
+    expect(JSON.parse(result.stdout)).not.toHaveProperty("decision");
   });
 
   it("handles malformed JSON without blocking hooks", async () => {

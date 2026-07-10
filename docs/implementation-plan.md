@@ -1,5 +1,9 @@
 # Implementation Plan
 
+## Current status
+
+Phases 0–8 are implemented and covered by the automated test, lint/typecheck, build, package, and representative adapter smoke-test workflow. Phase 9 remains intentionally deferred; the next integration task is capturing additional real host payloads as the supported CLIs evolve.
+
 ## Phase 0 — Confirm scope
 
 Decide the first package shape:
@@ -28,12 +32,13 @@ Add scripts:
   "scripts": {
     "dev": "tsx src/cli.ts",
     "test": "vitest run",
+    "lint": "tsc --noEmit",
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc --noEmit"
   },
   "bin": {
-    "notatechbro": "dist/src/cli.js",
-    "change-preview": "dist/src/cli.js"
+    "notatechbro": "dist/cli.js",
+    "change-preview": "dist/cli.js"
   }
 }
 ```

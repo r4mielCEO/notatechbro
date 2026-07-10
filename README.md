@@ -66,15 +66,25 @@ The CLI reads hook JSON on stdin and normalizes common payloads from:
 
 Human preview text goes to stderr by default so stdout stays available for hook protocols.
 
-## Install locally from this checkout
+## Install
 
 ```bash
-npm install
-npm run build
-npm link
+npm install --global notatechbro
+notatechbro --check
 ```
 
-If your shell cannot find `notatechbro` after linking, add npm's global bin directory to `PATH` for that shell.
+Expected result:
+
+```text
+NotATechBro 0.1.0 is installed and ready.
+Example: This will run this project's tests.
+```
+
+Want to try it without installing globally?
+
+```bash
+npx notatechbro@latest --check
+```
 
 Then test the executable:
 
@@ -94,11 +104,13 @@ Expected stderr:
 This will delete the `dist` folder.
 ```
 
-If you do not want to link it globally, run from the checkout:
+For local development from this checkout:
 
 ```bash
 echo '{"tool_name":"Bash","tool_input":{"command":"npm install"}}' | npm run dev
 ```
+
+Run `notatechbro --help` at any time for the short command reference.
 
 ## JSON mode
 
@@ -111,10 +123,10 @@ echo '{"tool_name":"Bash","tool_input":{"command":"git push"}}' | notatechbro --
 Output:
 
 ```json
-{"decision":"allow","preview":"This will upload your local commits to the remote repository.","confidence":"high","risk":"medium"}
+{"preview":"This will upload your local commits to the remote repository.","confidence":"high","risk":"medium"}
 ```
 
-`decision: "allow"` is only protocol compatibility. This MVP does not approve, deny, block, or mutate tool calls.
+JSON mode reports the preview and metadata only. It does not approve, deny, block, or mutate tool calls.
 
 ## Quiet mode
 
@@ -123,6 +135,24 @@ Suppress low-value read-only previews:
 ```bash
 echo '{"tool_name":"read_file","tool_input":{"path":"README.md"}}' | notatechbro --quiet
 ```
+
+## Library API
+
+The deterministic engine can also be reused from TypeScript or JavaScript:
+
+```ts
+import { explainAction, normalizeCodexPayload } from "notatechbro";
+
+const action = normalizeCodexPayload({
+  tool_name: "exec_command",
+  tool_input: { cmd: "npm test" },
+});
+
+console.log(explainAction(action).message);
+// This will run this project's tests.
+```
+
+The package root exports the shared normalizer and dedicated Claude, Codex, Hermes, and generic adapter entrypoints.
 
 ## Examples
 
@@ -188,6 +218,7 @@ Codex CLI 0.134+ `PreToolUse` config and payload shape are documented and covere
 ```bash
 npm install
 npm run test
+npm run lint
 npm run typecheck
 npm run build
 ```
@@ -217,6 +248,7 @@ This checkpoint passes:
 
 ```bash
 npm run test
+npm run lint
 npm run typecheck
 npm run build
 ```

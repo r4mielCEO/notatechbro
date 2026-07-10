@@ -47,6 +47,18 @@ describe("adapter normalization", () => {
       source: "codex",
     });
 
+    expect(normalizePayload({ tool_call: { name: "exec_command", arguments: '{"cmd":"npm test"}' } })).toMatchObject({
+      kind: "shell",
+      command: "npm test",
+      source: "codex",
+    });
+
+    expect(normalizePayload({ tool_name: "exec_command", tool_input: { cmd: ["npm", "test"] } })).toMatchObject({
+      kind: "shell",
+      command: "npm test",
+      source: "codex",
+    });
+
     expect(
       normalizePayload({
         cwd: "/repo",
@@ -61,6 +73,15 @@ describe("adapter normalization", () => {
         turn_id: "turn",
       }),
     ).toMatchObject({ kind: "shell", command: "npm test", source: "codex", cwd: "/repo" });
+  });
+
+  it("extracts affected paths from Codex apply_patch text", () => {
+    const patch = "*** Begin Patch\n*** Update File: src/app.ts\n*** Add File: src/new.ts\n*** End Patch";
+    expect(normalizePayload({ tool_call: { name: "apply_patch", arguments: { patch } } })).toMatchObject({
+      kind: "file_edit",
+      paths: ["src/app.ts", "src/new.ts"],
+      source: "codex",
+    });
   });
 
   it("keeps unknown payloads explainable", () => {

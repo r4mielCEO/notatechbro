@@ -86,3 +86,7 @@ Keep these files current:
 - `docs/cli-adapters.md`: host CLI integration details
 - `docs/implementation-plan.md`: milestones and TODOs
 - `docs/safety-and-ux.md`: language and risk guidance
+
+## Work log
+
+- 2026-07-08: Checked local launch notes and confirmed the next recommended subreddit post is the `r/ClaudeAI` views/users version, with `r/opensource` reserved for the collaboration/contributor push.

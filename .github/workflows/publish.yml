@@ -1,20 +1,14 @@
-name: CI
+name: Publish package
 
 on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
+  workflow_dispatch:
 
 permissions:
   contents: read
-
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+  id-token: write
 
 jobs:
-  test:
-    name: Verify and package
+  publish:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
@@ -24,6 +18,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
+          registry-url: https://registry.npmjs.org
           cache: npm
 
       - name: Install dependencies
@@ -32,5 +27,7 @@ jobs:
       - name: Verify
         run: npm run verify
 
-      - name: Check package contents
-        run: npm pack --dry-run
+      - name: Publish with provenance
+        run: npm publish --provenance --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

@@ -1,30 +1,60 @@
 {
   "name": "notatechbro",
-  "version": "0.0.0",
-  "private": true,
+  "version": "0.1.0",
   "description": "Plain-English command previews for agentic CLIs before they run.",
+  "keywords": [
+    "agentic-cli",
+    "claude-code",
+    "codex",
+    "hermes",
+    "hooks",
+    "cli",
+    "developer-tools"
+  ],
   "license": "MIT",
   "type": "module",
-  "main": "dist/src/index.js",
-  "types": "dist/src/index.d.ts",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "exports": {
-    ".": "./dist/src/index.js"
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
   },
   "bin": {
-    "notatechbro": "dist/src/cli.js",
-    "change-preview": "dist/src/cli.js"
+    "notatechbro": "./dist/cli.js",
+    "change-preview": "./dist/cli.js"
   },
   "files": [
     "dist",
-    "README.md",
-    "docs",
+    "CHANGELOG.md",
     "examples"
   ],
+  "sideEffects": false,
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/r4mielCEO/notatechbro.git"
+  },
+  "bugs": {
+    "url": "https://github.com/r4mielCEO/notatechbro/issues"
+  },
+  "homepage": "https://r4mielceo.github.io/notatechbro/",
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "dev": "tsx src/cli.ts",
     "test": "vitest run",
-    "build": "tsc -p tsconfig.json",
-    "typecheck": "tsc --noEmit"
+    "lint": "tsc --noEmit",
+    "clean": "node --eval \"require('node:fs').rmSync('dist',{recursive:true,force:true})\"",
+    "build": "npm run clean && tsc -p tsconfig.json",
+    "typecheck": "tsc --noEmit",
+    "verify": "npm run test && npm run lint && npm run build",
+    "prepack": "npm run build",
+    "prepublishOnly": "npm run verify"
   },
   "dependencies": {
     "zod": "^4.4.3"

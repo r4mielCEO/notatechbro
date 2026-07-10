@@ -106,11 +106,13 @@ Candidate supported payloads:
 ```json
 {
   "tool_call": {
-    "name": "shell",
-    "input": { "command": "pytest" }
+    "name": "exec_command",
+    "arguments": "{\"cmd\":\"pytest\"}"
   }
 }
 ```
+
+The tolerant Codex adapter also accepts `shell`, `shell_command`, and `exec_command`, with object or serialized-JSON arguments.
 
 Config pattern:
 
@@ -132,4 +134,4 @@ Do not use `notatechbro --json` for Codex yet. Codex has its own hook response s
 3. Do not send payload contents to external services.
 4. Print human text to stderr by default.
 5. Only use stdout in `--json` mode.
-6. Do not claim approval or safety. `decision: "allow"` is protocol compatibility only.
+6. Do not claim approval or safety. JSON mode contains explanation metadata, not a decision.

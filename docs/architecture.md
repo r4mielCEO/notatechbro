@@ -78,6 +78,8 @@ src/
     generic.ts            # generic adapter entrypoint
 ```
 
+The package root exports the shared engine plus each adapter entrypoint, so integrations do not need to import internal build paths.
+
 ## Rule engine
 
 The MVP supports deterministic rules for:
@@ -109,14 +111,13 @@ JSON mode:
 
 ```json
 {
-  "decision": "allow",
   "preview": "This will delete the `dist` folder.",
   "confidence": "high",
   "risk": "high"
 }
 ```
 
-`decision: "allow"` exists only for host protocol compatibility. The MVP does not make a safety decision.
+JSON mode deliberately omits approval or denial fields. The MVP does not make a safety decision.
 
 Quiet mode:
 

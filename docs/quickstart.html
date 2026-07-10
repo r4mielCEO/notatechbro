@@ -19,7 +19,7 @@
     <main class="doc-shell">
       <section class="hero">
         <p class="eyebrow">Quickstart</p>
-        <h1>Install locally. Run one preview.</h1>
+        <h1>Install once. Check it. You’re ready.</h1>
         <p>NotATechBro reads hook JSON from stdin and prints a plain-English explanation before the agent command runs.</p>
       </section>
       <section class="doc-grid">
@@ -29,11 +29,10 @@
         </aside>
         <article class="prose">
           <div class="github-strip"><span>GitHub is the source of truth for the raw docs.</span><a class="button" href="https://github.com/r4mielCEO/notatechbro/blob/main/README.md">View on GitHub</a></div>
-          <h2>Install from this checkout</h2>
-          <pre><code>npm install
-npm run build
-npm link</code></pre>
-          <p>If your shell cannot find <code>notatechbro</code> after linking, add npm's global bin directory to <code>PATH</code> for that shell.</p>
+          <h2>Install from npm</h2>
+          <pre><code>npm install --global notatechbro
+notatechbro --check</code></pre>
+          <p>To try it without a global install, run <code>npx notatechbro@latest --check</code>.</p>
           <h3>Run the first preview</h3>
           <pre><code>echo '{"tool_name":"Bash","tool_input":{"command":"rm -rf dist"}}' | notatechbro</code></pre>
           <p>Backwards-compatible alias: <code>change-preview</code>.</p>
@@ -41,7 +40,7 @@ npm link</code></pre>
           <pre><code>This will delete the `dist` folder.</code></pre>
           <h3>Use JSON mode when a host expects stdout</h3>
           <pre><code>echo '{"tool_name":"Bash","tool_input":{"command":"git push"}}' | notatechbro --json</code></pre>
-          <p>The <code>decision: "allow"</code> field is protocol compatibility only. NotATechBro does not approve, deny, block, or change tool calls.</p>
+          <p>JSON mode reports the preview and metadata only. NotATechBro does not approve, deny, block, or change tool calls.</p>
         </article>
       </section>
     </main>

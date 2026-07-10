@@ -23,7 +23,7 @@ echo '{"tool_name":"Bash","tool_input":{"command":"rm -rf dist"}}' | change-prev
 # This will delete the `dist` folder.
 
 echo '{"tool_name":"Bash","tool_input":{"command":"git push"}}' | notatechbro --json
-# {"decision":"allow","preview":"This will upload your local commits to the remote repository.","confidence":"high","risk":"medium"}
+# {"preview":"This will upload your local commits to the remote repository.","confidence":"high","risk":"medium"}
 ```
 
 ## Adapter payload smoke tests
@@ -81,7 +81,7 @@ Input:
 Output on stderr:
 
 ```text
-This will run this project's test suite.
+This will run this project's tests.
 ```
 
 Codex local evidence:

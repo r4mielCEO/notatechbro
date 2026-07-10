@@ -27,7 +27,7 @@ export function normalizePayload(payload: unknown): NormalizedAction {
 
   const data = parsed.data;
   const toolName = data.tool_call?.name ?? data.tool_name ?? "unknown";
-  const input = data.tool_call?.input ?? data.tool_call?.arguments ?? data.tool_input;
+  const input = parseSerializedInput(data.tool_call?.input ?? data.tool_call?.arguments ?? data.tool_input);
   const source = detectSource(data, toolName, data.tool_call !== undefined);
   const cwd = data.cwd;
   const command = getString(input, ["command", "cmd", "script"]);
@@ -37,7 +37,8 @@ export function normalizePayload(payload: unknown): NormalizedAction {
   }
 
   const path = getString(input, ["path", "file_path", "filepath", "target_file", "targetPath"]);
-  const paths = getStringArray(input, ["paths", "file_paths", "files"]);
+  const explicitPaths = getStringArray(input, ["paths", "file_paths", "files"]);
+  const paths = explicitPaths.length > 0 ? explicitPaths : getPatchPaths(input);
   const maybePath = path ?? paths[0];
   const lowerTool = toolName.toLowerCase();
 
@@ -59,13 +60,13 @@ function detectSource(data: z.infer<typeof HookPayloadSchema>, toolName: string,
     return "codex";
   }
   if (["Bash", "Write", "Edit", "MultiEdit", "Read"].includes(toolName)) return "claude";
-  if (hasToolCall || ["shell", "apply_patch"].includes(toolName)) return "codex";
+  if (hasToolCall || ["shell", "shell_command", "exec_command", "apply_patch"].includes(toolName.toLowerCase())) return "codex";
   if (["terminal", "bash", "write_file", "read_file", "patch"].includes(toolName)) return "hermes";
   return "generic";
 }
 
 function isShellTool(toolName: string): boolean {
-  return ["Bash", "bash", "terminal", "shell"].includes(toolName);
+  return ["bash", "terminal", "shell", "exec_command", "shell_command"].includes(toolName.toLowerCase());
 }
 
 function isWriteTool(lowerTool: string): boolean {
@@ -89,8 +90,20 @@ function getString(input: unknown, keys: string[]): string | undefined {
   for (const key of keys) {
     const value = input[key];
     if (typeof value === "string" && value.length > 0) return value;
+    if (Array.isArray(value) && value.length > 0 && value.every((item) => typeof item === "string")) {
+      return value.join(" ");
+    }
   }
   return undefined;
+}
+
+function parseSerializedInput(input: unknown): unknown {
+  if (typeof input !== "string") return input;
+  try {
+    return JSON.parse(input) as unknown;
+  } catch {
+    return input;
+  }
 }
 
 function getStringArray(input: unknown, keys: string[]): string[] {
@@ -108,6 +121,21 @@ function getStringArray(input: unknown, keys: string[]): string[] {
   }
 
   return [];
+}
+
+function getPatchPaths(input: unknown): string[] {
+  const patch =
+    typeof input === "string"
+      ? input
+      : isRecord(input)
+        ? getString(input, ["patch", "diff", "content"])
+        : undefined;
+  if (!patch) return [];
+
+  const paths = [...patch.matchAll(/^\*\*\* (?:Add|Update|Delete) File:\s*(.+)$/gm), ...patch.matchAll(/^\+\+\+ b\/(.+)$/gm)]
+    .map((match) => match[1]?.trim())
+    .filter((path): path is string => Boolean(path) && path !== "/dev/null");
+  return [...new Set(paths)];
 }
 
 function unknownTool(toolName: string, source: ActionSource, input: unknown): NormalizedAction {
