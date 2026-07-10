@@ -5,9 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       name="description"
-      content="NotATechBro explains Claude Code, Codex, and Hermes tool calls in plain English before they run."
+      content="NotATechBro turns Claude Code and Codex commands into short, plain-English explanations before they run."
     />
-    <title>NotATechBro — Plain-English previews for agentic CLIs</title>
+    <meta property="og:title" content="NotATechBro — Understand agent commands before they run" />
+    <meta property="og:description" content="Plain-English command previews for Claude Code and Codex CLI." />
+    <meta property="og:image" content="https://r4mielceo.github.io/notatechbro/assets/notatechbro-landing-preview.png" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://r4mielceo.github.io/notatechbro/" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <title>NotATechBro — Understand agent commands before they run</title>
+    <link rel="canonical" href="https://r4mielceo.github.io/notatechbro/" />
     <link rel="icon" type="image/png" href="assets/notatechbro-icon.png" />
     <link rel="apple-touch-icon" href="assets/notatechbro-icon.png" />
     <style>
@@ -874,12 +881,13 @@
           <span>NotATechBro</span>
         </a>
         <nav class="nav-links" aria-label="Page sections">
-          <a href="#features">Product</a>
-          <a href="#install">Install</a>
+          <a href="#features">How it works</a>
+          <a href="quickstart.html">Get started</a>
+          <a href="cli-adapters.html">Connect</a>
           <a href="#faq">FAQ</a>
         </nav>
         <div class="nav-actions">
-          <a class="button ghost" href="quickstart.html">Docs</a>
+          <a class="button ghost" href="architecture.html">For developers</a>
           <a class="button primary" href="#install">Install</a>
         </div>
       </div>
@@ -887,16 +895,16 @@
 
     <main id="top">
       <section class="hero" aria-labelledby="hero-title">
-        <p class="label">CLI</p>
-        <h1 id="hero-title">Explain agent actions. <span class="muted-title">Before they run.</span></h1>
+        <p class="label">Plain-English command previews</p>
+        <h1 id="hero-title">Understand what your agent is about to do.</h1>
         <p class="hero-sub">
-          NotATechBro shows a plain-English preview whenever Claude Code, Codex, or Hermes asks to run a command.
+          NotATechBro turns commands from Claude Code and Codex into one short explanation before they run.
         </p>
 
         <div class="hero-stage" aria-label="Interactive CLI preview demo">
           <div class="stage-copy">
-            <h2>Know what the agent is asking for.</h2>
-            <p>When an agent asks for permission, NotATechBro explains the command before you choose yes or no.</p>
+            <h2>Read the impact. Then decide.</h2>
+            <p>After you connect it to your agent, NotATechBro explains the command and leaves the choice to you.</p>
             <button class="button command-copy" type="button" data-copy="npm install --global notatechbro && notatechbro --check" aria-label="Copy install command">
               <span class="command-text">npm install --global notatechbro &amp;&amp; notatechbro --check</span>
               <span class="copy-dot" aria-hidden="true">⧉</span>
@@ -913,67 +921,65 @@
 
       <section class="status-rail" aria-label="Project proof points">
         <div class="status-item">
-          <span class="status-number">3</span>
-          <span class="status-label">Agent CLI families: Claude Code, Codex-style payloads, and Hermes.</span>
+          <span class="status-number">2</span>
+          <span class="status-label">Beginner setup guides for Claude Code and Codex CLI.</span>
         </div>
         <div class="status-item">
           <span class="status-number">0</span>
-          <span class="status-label">Cloud calls, telemetry, accounts, or mandatory LLMs at runtime.</span>
+          <span class="status-label">Cloud calls, telemetry, or a NotATechBro account required while it runs.</span>
         </div>
         <div class="status-item">
           <span class="status-number">29</span>
-          <span class="status-label">Tests covering shell rules, file rules, adapters, CLI output, and malformed JSON.</span>
+          <span class="status-label">Tests covering common commands, file changes, and agent connections.</span>
         </div>
       </section>
 
       <section class="section" id="features" aria-labelledby="features-title">
-        <p class="label">Product</p>
-        <h2 id="features-title">Built for the moment before “approve”.</h2>
-        <p>
-          New agentic coding users do not need a shell lesson. They need to know what the agent is about to do.
-        </p>
+        <p class="label">How it works</p>
+        <h2 id="features-title">Three steps. No guessing.</h2>
+        <p>Install it once, connect your agent, and read a short explanation before a command runs.</p>
 
         <div class="cards">
           <article class="card">
             <div class="card-copy">
-              <h3>Impact in one sentence</h3>
-              <p>Deletes, installs, tests, git commands, file writes, and edits become short plain-English previews.</p>
+              <h3>1. Install it</h3>
+              <p>One npm command installs NotATechBro on your computer. A built-in check confirms it is ready.</p>
             </div>
             <div class="mini-demo model-list" aria-hidden="true">
-              <span>$ rm -rf dist</span>
-              <span class="active">This will delete the `dist` folder.</span>
+              <span>$ npm install --global notatechbro</span>
+              <span class="active">NotATechBro installed</span>
               <br />
-              <span>$ git clean -fd</span>
-              <span class="active">This may permanently delete untracked files.</span>
+              <span>$ notatechbro --check</span>
+              <span class="active">Installed and ready</span>
             </div>
           </article>
 
           <article class="card">
             <div class="card-copy">
-              <h3>Works across agent hooks</h3>
-              <p>Small adapters accept common Claude Code, Hermes, and Codex-style payloads. The rules stay local and easy to inspect.</p>
+              <h3>2. Connect your agent</h3>
+              <p>Choose Claude Code or Codex and copy the matching setup. You only need to do this once.</p>
             </div>
             <div class="mini-demo flow-board" aria-hidden="true">
               <div class="flow-nodes">
-                <div class="flow-node">hook payload</div>
-                <div class="flow-node">NormalizedAction</div>
-                <div class="flow-node">plain-English preview</div>
+                <div class="flow-node">Choose Claude or Codex</div>
+                <div class="flow-node">Copy the setup</div>
+                <div class="flow-node">Start a new session</div>
               </div>
             </div>
           </article>
 
           <article class="card">
             <div class="card-copy">
-              <h3>Explanations, not false confidence</h3>
-              <p>NotATechBro explains only. It does not claim a command is safe, and it keeps hook output separate from human text.</p>
+              <h3>3. Read, then decide</h3>
+              <p>See the likely impact in plain English. Your agent still asks you whether to continue.</p>
             </div>
             <div class="mini-demo automation-view" aria-hidden="true">
-              <div class="check-line"><span class="check">✓</span><span>stderr preview</span></div>
-              <div class="script-line">stdout stays protocol-safe</div>
-              <div class="check-line"><span class="check">✓</span><span>local rules</span></div>
-              <div class="script-line">no network at runtime</div>
-              <div class="check-line"><span class="check">✓</span><span>honest fallbacks</span></div>
-              <div class="script-line">“may” when approximate</div>
+              <div class="check-line"><span class="check">✓</span><span>plain-English preview</span></div>
+              <div class="script-line">This will run this project's tests.</div>
+              <div class="check-line"><span class="check">✓</span><span>you stay in control</span></div>
+              <div class="script-line">NotATechBro never chooses for you</div>
+              <div class="check-line"><span class="check">✓</span><span>runs locally</span></div>
+              <div class="script-line">no command data sent away</div>
             </div>
           </article>
         </div>
@@ -981,52 +987,51 @@
 
       <section class="section" id="install" aria-labelledby="install-title">
         <p class="label">Install</p>
-        <h2 id="install-title">Start with one local install.</h2>
-        <p>
-          Install the CLI, run a sample payload, then wire it into your agent's pre-tool hook.
-        </p>
+        <h2 id="install-title">Install it, then connect your agent.</h2>
+        <p>First install NotATechBro. Then choose the setup guide for Claude Code or Codex.</p>
         <div class="docs-grid">
           <button class="button command-copy" type="button" data-copy="npm install --global notatechbro && notatechbro --check" aria-label="Copy install command">
             <span class="command-text">npm install --global notatechbro &amp;&amp; notatechbro --check</span>
             <span class="copy-dot" aria-hidden="true">⧉</span>
           </button>
-          <button class="button command-copy" type="button" data-copy="echo '{&quot;tool_name&quot;:&quot;Bash&quot;,&quot;tool_input&quot;:{&quot;command&quot;:&quot;rm -rf dist&quot;}}' | notatechbro" aria-label="Copy sample payload command">
-            <span class="command-text">echo '{"tool_name":"Bash","tool_input":{"command":"rm -rf dist"}}' | notatechbro</span>
-            <span class="copy-dot" aria-hidden="true">⧉</span>
-          </button>
+          <a class="doc-link" href="cli-adapters.html">
+            <h3>Connect Claude Code or Codex</h3>
+            <p>Copy the setup for the agent you use.</p>
+            <span>Open connection guide →</span>
+          </a>
         </div>
       </section>
 
       <section class="section" aria-labelledby="learn-title">
-        <p class="label">Learn more</p>
-        <h2 id="learn-title">Docs for setting it up without guessing.</h2>
+        <p class="label">Why people use it</p>
+        <h2 id="learn-title">Clear, local, and always your choice.</h2>
         <div class="docs-grid">
           <a class="doc-link" href="quickstart.html">
-            <h3>Quickstart</h3>
-            <p>Install the CLI and run the first preview payload.</p>
-            <span>Read quickstart →</span>
+            <h3>Plain English</h3>
+            <p>Commands become one short sentence about what will probably happen.</p>
+            <span>Get started →</span>
           </a>
           <a class="doc-link" href="cli-adapters.html">
-            <h3>CLI adapters</h3>
-            <p>Claude Code, Hermes, Codex-style payloads, and generic tool JSON.</p>
-            <span>View adapters →</span>
+            <h3>Claude + Codex</h3>
+            <p>Copy-ready setup guides connect the two main supported agent CLIs.</p>
+            <span>Connect your agent →</span>
           </a>
           <a class="doc-link" href="safety-and-ux.html">
-            <h3>Safety wording</h3>
-            <p>Explain risk without pretending to approve commands.</p>
-            <span>Review language →</span>
+            <h3>You stay in control</h3>
+            <p>It explains commands but never approves, blocks, or runs them for you.</p>
+            <span>What it does →</span>
           </a>
           <a class="doc-link" href="architecture.html">
-            <h3>Architecture</h3>
-            <p>Hook payload, normalizer, action model, rule engine, preview.</p>
-            <span>See architecture →</span>
+            <h3>Private by default</h3>
+            <p>Explanations happen on your computer with no cloud calls or telemetry.</p>
+            <span>For developers →</span>
           </a>
         </div>
       </section>
 
       <section class="section" id="faq" aria-labelledby="faq-title">
         <p class="label">FAQ</p>
-        <h2 id="faq-title">Questions before you wire it into your agent.</h2>
+        <h2 id="faq-title">Questions before you get started.</h2>
         <div class="faq">
           <details open>
             <summary>Does it block dangerous commands?</summary>
@@ -1034,31 +1039,28 @@
           </details>
           <details>
             <summary>Does it send commands or paths to a server?</summary>
-            <p>No. It runs locally and uses deterministic rules. There are no runtime LLM calls, cloud calls, accounts, or telemetry.</p>
+            <p>No. It runs on your computer. There are no cloud calls, accounts, telemetry, or required AI service while it explains a command.</p>
           </details>
           <details>
             <summary>What will I see before a command runs?</summary>
-            <p>You see the command type, the command itself, and a short explanation of what it is likely to do. Then your agent still asks you to choose yes or no.</p>
+            <p>You see the command and a short explanation of what it is likely to do. Your agent still asks whether you want to continue.</p>
           </details>
           <details>
             <summary>Who is this for?</summary>
             <p>It is for people using agentic coding tools who want plain English before they approve a command, especially if shell syntax feels unfamiliar.</p>
           </details>
           <details>
-            <summary>Is Codex fully verified?</summary>
-            <p>Codex-style payloads are supported, but the exact hook config should be checked against the Codex CLI version you use.</p>
+            <summary>Does it work in the Claude or Codex desktop apps?</summary>
+            <p>The current verified release supports Claude Code CLI and Codex CLI. We do not yet claim that the preview appears inside either desktop app.</p>
           </details>
         </div>
       </section>
 
       <section class="final" aria-labelledby="final-title">
         <div>
-          <h2 id="final-title">Try NotATechBro.</h2>
-          <p>Give new agentic coding users a clearer moment before the agent runs a command.</p>
-          <button class="button command-copy" type="button" data-copy="echo '{&quot;tool_name&quot;:&quot;Bash&quot;,&quot;tool_input&quot;:{&quot;command&quot;:&quot;git push&quot;}}' | notatechbro --json" aria-label="Copy JSON mode example command">
-            <span class="command-text">echo '{"tool_name":"Bash","tool_input":{"command":"git push"}}' | notatechbro --json</span>
-            <span class="copy-dot" aria-hidden="true">⧉</span>
-          </button>
+          <h2 id="final-title">Know what happens before it happens.</h2>
+          <p>Install NotATechBro, connect Claude Code or Codex, and keep the final decision in your hands.</p>
+          <a class="button primary" href="quickstart.html">Get started</a>
         </div>
       </section>
     </main>
@@ -1066,12 +1068,12 @@
     <footer class="footer">
       <div class="footer-inner">
         <div>
-          <strong>Value proposition</strong>
-          <span>NotATechBro helps non-technical users understand agent CLI actions before they run.</span>
+          <strong>What it does</strong>
+          <span>Turns agent commands into short, plain-English explanations.</span>
         </div>
-        <div><strong>Product</strong><span>Local CLI<br />Deterministic rules<br />Works with adapters</span></div>
-        <div><strong>Integrations</strong><span>Claude Code<br />Hermes<br />Codex-style payloads</span></div>
-        <div><strong>Runtime</strong><span>No cloud<br />No telemetry<br />No mandatory LLM</span></div>
+        <div><strong>Get started</strong><span>Install once<br />Connect your agent<br />Read the preview</span></div>
+        <div><strong>Verified for</strong><span>Claude Code CLI<br />Codex CLI<br />Hermes advanced setup</span></div>
+        <div><strong>Private by default</strong><span>No cloud calls<br />No telemetry<br />No required account</span></div>
       </div>
     </footer>
 

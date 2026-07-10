@@ -3,8 +3,13 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Quickstart — NotATechBro</title>
-    <meta name="description" content="Install NotATechBro locally and run the first plain-English command preview." />
+    <title>Get Started — NotATechBro</title>
+    <meta name="description" content="Install NotATechBro and connect it to Claude Code or Codex in three simple steps." />
+    <meta property="og:title" content="Get Started — NotATechBro" />
+    <meta property="og:description" content="Install NotATechBro and connect Claude Code or Codex in three simple steps." />
+    <meta property="og:image" content="https://r4mielceo.github.io/notatechbro/assets/notatechbro-landing-preview.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="canonical" href="https://r4mielceo.github.io/notatechbro/quickstart.html" />
     <link rel="icon" type="image/png" href="assets/notatechbro-icon.png" />
     <link rel="apple-touch-icon" href="assets/notatechbro-icon.png" />
     <link rel="stylesheet" href="assets/docs.css" />
@@ -13,37 +18,57 @@
     <header class="nav">
       <div class="nav-inner">
         <a class="brand" href="landing.html"><img src="assets/notatechbro-icon.png" alt="" aria-hidden="true" /><span>NotATechBro</span></a>
-        <div class="nav-actions"><a href="landing.html">Landing</a><a href="cli-adapters.html">Adapters</a></div>
+        <div class="nav-actions"><a href="landing.html">Home</a><a href="cli-adapters.html">Connect your agent</a><a href="architecture.html">For developers</a></div>
       </div>
     </header>
     <main class="doc-shell">
       <section class="hero">
-        <p class="eyebrow">Quickstart</p>
-        <h1>Install once. Check it. You’re ready.</h1>
-        <p>NotATechBro reads hook JSON from stdin and prints a plain-English explanation before the agent command runs.</p>
+        <p class="eyebrow">Get started</p>
+        <h1>Get NotATechBro working in three steps.</h1>
+        <p>Install it once, confirm it is ready, then connect the coding agent you use.</p>
       </section>
       <section class="doc-grid">
         <aside class="card">
-          <h2>What you need</h2>
-          <p>A local checkout of the repo and Node/npm. The primary CLI executable is <code>notatechbro</code>. The older <code>change-preview</code> alias still works for existing hook configs.</p>
+          <h2>Before you start</h2>
+          <p>You need Node.js 18 or newer, npm, and either Claude Code CLI or Codex CLI. You do not need to download this repository or create a NotATechBro account.</p>
         </aside>
         <article class="prose">
-          <div class="github-strip"><span>GitHub is the source of truth for the raw docs.</span><a class="button" href="https://github.com/r4mielCEO/notatechbro/blob/main/README.md">View on GitHub</a></div>
-          <h2>Install from npm</h2>
-          <pre><code>npm install --global notatechbro
-notatechbro --check</code></pre>
-          <p>To try it without a global install, run <code>npx notatechbro@latest --check</code>.</p>
-          <h3>Run the first preview</h3>
-          <pre><code>echo '{"tool_name":"Bash","tool_input":{"command":"rm -rf dist"}}' | notatechbro</code></pre>
-          <p>Backwards-compatible alias: <code>change-preview</code>.</p>
-          <p>Expected preview:</p>
-          <pre><code>This will delete the `dist` folder.</code></pre>
-          <h3>Use JSON mode when a host expects stdout</h3>
-          <pre><code>echo '{"tool_name":"Bash","tool_input":{"command":"git push"}}' | notatechbro --json</code></pre>
-          <p>JSON mode reports the preview and metadata only. NotATechBro does not approve, deny, block, or change tool calls.</p>
+          <div class="github-strip"><span>Already installed? Go straight to connecting your agent.</span><a class="button" href="cli-adapters.html">Choose Claude or Codex</a></div>
+          <h2>1. Install NotATechBro</h2>
+          <p>Copy this command into your terminal:</p>
+          <pre><code>npm install --global notatechbro</code></pre>
+
+          <h2>2. Check the installation</h2>
+          <pre><code>notatechbro --check</code></pre>
+          <p>You should see:</p>
+          <pre><code>NotATechBro 0.1.0 is installed and ready.
+Example: This will run this project's tests.</code></pre>
+
+          <h2>3. Connect your coding agent</h2>
+          <p>Choose the tool you use and copy its setup:</p>
+          <div class="choice-links">
+            <a class="button" href="cli-adapters.html#claude-code">Connect Claude Code</a>
+            <a class="button" href="cli-adapters.html#codex-cli">Connect Codex</a>
+          </div>
+
+          <h2>Try a safe first command</h2>
+          <p>Start a new agent session and ask it to run the project tests. When the agent proposes <code>npm test</code>, NotATechBro explains:</p>
+          <pre><code>This will run this project's tests.</code></pre>
+          <p>The agent still asks whether you want to continue. NotATechBro never chooses for you.</p>
+
+          <details class="advanced-details">
+            <summary>Advanced testing options</summary>
+            <p>Try the installation without installing globally:</p>
+            <pre><code>npx notatechbro@latest --check</code></pre>
+            <p>Test a hook payload manually:</p>
+            <pre><code>echo '{"tool_name":"Bash","tool_input":{"command":"git push"}}' | notatechbro</code></pre>
+            <p>For systems that require structured output:</p>
+            <pre><code>echo '{"tool_name":"Bash","tool_input":{"command":"git push"}}' | notatechbro --json</code></pre>
+            <p>The older <code>change-preview</code> command remains available for existing setups.</p>
+          </details>
         </article>
       </section>
     </main>
-    <footer class="footer"><div class="footer-inner">Local by default. No cloud calls, no telemetry, no mandatory LLM.</div></footer>
+    <footer class="footer"><div class="footer-inner">Runs locally. No cloud calls, telemetry, or NotATechBro account required.</div></footer>
   </body>
 </html>

@@ -3,8 +3,13 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>CLI adapters — NotATechBro</title>
-    <meta name="description" content="How NotATechBro connects to Claude Code, Hermes, Codex-style payloads, and generic tool JSON." />
+    <title>Connect Claude Code or Codex — NotATechBro</title>
+    <meta name="description" content="Copy-ready setup instructions for connecting NotATechBro to Claude Code CLI or Codex CLI." />
+    <meta property="og:title" content="Connect Claude Code or Codex — NotATechBro" />
+    <meta property="og:description" content="Copy-ready setup instructions for Claude Code CLI and Codex CLI." />
+    <meta property="og:image" content="https://r4mielceo.github.io/notatechbro/assets/notatechbro-landing-preview.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="canonical" href="https://r4mielceo.github.io/notatechbro/cli-adapters.html" />
     <link rel="icon" type="image/png" href="assets/notatechbro-icon.png" />
     <link rel="apple-touch-icon" href="assets/notatechbro-icon.png" />
     <link rel="stylesheet" href="assets/docs.css" />
@@ -13,53 +18,95 @@
     <header class="nav">
       <div class="nav-inner">
         <a class="brand" href="landing.html"><img src="assets/notatechbro-icon.png" alt="" aria-hidden="true" /><span>NotATechBro</span></a>
-        <div class="nav-actions"><a href="landing.html">Landing</a><a href="quickstart.html">Quickstart</a></div>
+        <div class="nav-actions"><a href="landing.html">Home</a><a href="quickstart.html">Get started</a><a href="architecture.html">For developers</a></div>
       </div>
     </header>
     <main class="doc-shell">
       <section class="hero">
-        <p class="eyebrow">CLI adapters</p>
-        <h1>One preview engine. Different hook payloads.</h1>
-        <p>Adapters normalize host-specific JSON into the same internal action model, then shared rules write the plain-English preview.</p>
+        <p class="eyebrow">Connect your agent</p>
+        <h1>Choose Claude Code or Codex.</h1>
+        <p>After installing NotATechBro, copy one setup into the coding agent you use.</p>
       </section>
       <section class="doc-grid">
         <aside class="card">
-          <h2>Supported today</h2>
+          <h2>Before you connect</h2>
           <ul>
-            <li>Claude Code <code>PreToolUse</code> style payloads</li>
-            <li>Hermes <code>pre_tool_call</code> payloads</li>
-            <li>Codex-style shell/tool call candidates</li>
-            <li>Generic <code>tool_name</code> and <code>tool_input</code> JSON</li>
+            <li>Run <code>notatechbro --check</code>.</li>
+            <li>Choose one guide on this page.</li>
+            <li>Start a new agent session afterward.</li>
+            <li>Use <code>npm test</code> as a safe first check.</li>
           </ul>
         </aside>
         <article class="prose">
-          <div class="github-strip"><span>Want the raw config snippets?</span><a class="button" href="https://github.com/r4mielCEO/notatechbro/blob/main/docs/cli-adapters.md">View on GitHub</a></div>
-          <h2>Claude Code</h2>
-          <p>Claude Code command hooks can pipe JSON into <code>notatechbro</code>. The older <code>change-preview</code> alias remains supported for existing configs. Human text goes to stderr by default so stdout stays available for host protocols.</p>
-          <pre><code>{
-  "tool_name": "Bash",
-  "tool_input": { "command": "npm install" },
-  "cwd": "/path/to/project"
+          <div class="github-strip"><span>Need the protocol details or existing-file merge guidance?</span><a class="button" href="https://github.com/r4mielCEO/notatechbro/blob/main/docs/cli-adapters.md">Open developer guide</a></div>
+
+          <section id="claude-code" class="setup-section">
+            <p class="step-label">Option 1</p>
+            <h2>Connect Claude Code</h2>
+            <ol>
+              <li>Open your project folder.</li>
+              <li>Create <code>.claude/settings.json</code> if it does not already exist.</li>
+              <li>Paste this setup into the new file:</li>
+            </ol>
+            <pre><code>{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash|Edit|MultiEdit|Write|Read",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "notatechbro"
+          }
+        ]
+      }
+    ]
+  }
 }</code></pre>
-          <h2>Hermes</h2>
-          <p>Hermes can call the CLI from a pre-tool hook. The tool stays observer-only and does not block.</p>
-          <pre><code>{
-  "hook_event_name": "pre_tool_call",
-  "tool_name": "terminal",
-  "tool_input": { "command": "git push" }
-}</code></pre>
-          <h2>Codex CLI</h2>
-          <p>Codex CLI 0.134+ supports Claude-style lifecycle hooks from <code>~/.codex/config.toml</code>. Keep NotATechBro observer-only: default mode writes human text to stderr and leaves stdout empty.</p>
+            <p>If the file already contains settings, do not replace them. Add the <code>hooks</code> section alongside the existing settings or use the developer guide above.</p>
+            <p>Start a new Claude Code session, then ask it to run the project tests.</p>
+          </section>
+
+          <section id="codex-cli" class="setup-section">
+            <p class="step-label">Option 2</p>
+            <h2>Connect Codex CLI</h2>
+            <ol>
+              <li>Open <code>~/.codex/config.toml</code>.</li>
+              <li>Add the setup below. If the file already has a <code>[features]</code> section, add <code>hooks = true</code> inside that section instead of creating a second one.</li>
+            </ol>
           <pre><code>[features]
 hooks = true
 
 [[hooks.PreToolUse]]
 matcher = "Bash"
 hooks = [{ type = "command", command = "notatechbro", timeout = 5 }]</code></pre>
-          <p>Do not use <code>notatechbro --json</code> for Codex yet; Codex has its own structured hook response schema for blocking or mutating calls.</p>
+            <p>Start a new Codex session. If Codex asks whether you trust the hook, review it and accept it before continuing.</p>
+          </section>
+
+          <h2>What success looks like</h2>
+          <p>Ask your connected agent to run <code>npm test</code>. Before the command runs, NotATechBro should print:</p>
+          <pre><code>This will run this project's tests.</code></pre>
+          <p>Your agent still controls its normal approval prompt. NotATechBro only adds the explanation.</p>
+
+          <h2>Quick troubleshooting</h2>
+          <ul>
+            <li><strong>“Command not found”:</strong> run <code>notatechbro --check</code>. If that fails, install the package again.</li>
+            <li><strong>No preview:</strong> start a new agent session and confirm the setup is in the correct file.</li>
+            <li><strong>Codex does not run the hook:</strong> confirm <code>hooks = true</code> and accept the hook-trust prompt.</li>
+          </ul>
+
+          <details class="advanced-details">
+            <summary>Advanced integrations: Hermes and custom tools</summary>
+            <p>Hermes can call NotATechBro from a <code>pre_tool_call</code> hook:</p>
+            <pre><code>hooks:
+  pre_tool_call:
+    - command: "notatechbro"
+      matcher: "terminal|bash|shell|write_file|read_file|patch"</code></pre>
+            <p>Hermes configuration placement can differ by version. The developer guide includes supported payload shapes and verification notes for custom integrations.</p>
+          </details>
         </article>
       </section>
     </main>
-    <footer class="footer"><div class="footer-inner">Adapters are intentionally thin. Interpretation belongs in the shared local rule engine.</div></footer>
+    <footer class="footer"><div class="footer-inner">Connect once, start a new session, and keep the final decision in your hands.</div></footer>
   </body>
 </html>

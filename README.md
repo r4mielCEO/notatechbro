@@ -15,17 +15,17 @@
 <p align="center">
   <a href="https://r4mielceo.github.io/notatechbro/">Website</a>
   ·
-  <a href="docs/quickstart.html">Quickstart</a>
-  · <a href="docs/cli-adapters.html">Adapters</a>
-  · <a href="docs/safety-and-ux.html">Safety wording</a>
-  · <a href="docs/architecture.html">Architecture</a>
+  <a href="docs/quickstart.html">Get started</a>
+  · <a href="docs/cli-adapters.html">Connect your agent</a>
+  · <a href="docs/safety-and-ux.html">What it does</a>
+  · <a href="docs/architecture.html">For developers</a>
 </p>
 
 <p align="center">
   <img src="docs/assets/notatechbro-landing-preview.png" alt="NotATechBro landing page preview" width="900" />
 </p>
 
-NotATechBro is a small local CLI that explains agentic CLI tool calls before they run. It is built for people who are new to agentic coding and do not want to approve commands they cannot read.
+NotATechBro is a small local tool that turns Claude Code and Codex commands into short, plain-English explanations before they run. It is for people who want to understand a command without learning shell syntax first.
 
 Instead of showing only this:
 
@@ -43,9 +43,9 @@ The primary executable is `notatechbro`. The older `change-preview` command rema
 
 ## Why it exists
 
-Agentic coding tools often ask for permission with a raw command. That is fine for developers. It is not fine for everyone else.
+Coding agents often ask for permission using a raw command. That can be confusing if commands are not part of your everyday work.
 
-NotATechBro adds a local explanation layer between the agent's request and the user's approval moment. It explains the likely impact in one sentence, then gets out of the way.
+After you connect it to your agent, NotATechBro explains the likely impact in one sentence. Your agent still asks whether you want to continue.
 
 ## What it does not do
 
@@ -55,16 +55,13 @@ NotATechBro adds a local explanation layer between the agent's request and the u
 - It does not require an LLM at runtime.
 - It does not claim that a command is safe.
 
-## Supported MVP integrations
+## Works with
 
-The CLI reads hook JSON on stdin and normalizes common payloads from:
+- Claude Code CLI
+- Codex CLI
+- Hermes CLI through the advanced integration guide
 
-- Claude Code `PreToolUse` command hooks
-- Hermes `pre_tool_call` shell hooks
-- Codex CLI 0.134+ `PreToolUse` command hooks, plus permissive support for older `shell` / `tool_call` payload shapes
-- generic tool payloads with `tool_name` and `tool_input`
-
-Human preview text goes to stderr by default so stdout stays available for hook protocols.
+The current verified release is for command-line versions of Claude Code and Codex. It does not yet claim that previews appear inside their desktop apps.
 
 ## Install
 
@@ -86,25 +83,38 @@ Want to try it without installing globally?
 npx notatechbro@latest --check
 ```
 
-Then test the executable:
+Then connect the coding agent you use:
+
+- [Connect Claude Code](docs/cli-adapters.html#claude-code)
+- [Connect Codex](docs/cli-adapters.html#codex-cli)
+
+For a safe first check, ask your connected agent to run the project tests. If it proposes `npm test`, NotATechBro prints:
+
+```text
+This will run this project's tests.
+```
+
+## Advanced CLI testing
+
+Test a hook payload manually:
 
 ```bash
 echo '{"tool_name":"Bash","tool_input":{"command":"rm -rf dist"}}' | notatechbro
 ```
 
-Backwards-compatible alias:
+Backwards-compatible alias for existing setups:
 
 ```bash
 echo '{"tool_name":"Bash","tool_input":{"command":"rm -rf dist"}}' | change-preview
 ```
 
-Expected stderr:
+Expected preview:
 
 ```text
 This will delete the `dist` folder.
 ```
 
-For local development from this checkout:
+For development from this checkout:
 
 ```bash
 echo '{"tool_name":"Bash","tool_input":{"command":"npm install"}}' | npm run dev
@@ -112,7 +122,7 @@ echo '{"tool_name":"Bash","tool_input":{"command":"npm install"}}' | npm run dev
 
 Run `notatechbro --help` at any time for the short command reference.
 
-## JSON mode
+### JSON mode
 
 Some hook systems expect structured stdout. Use `--json`:
 
@@ -128,7 +138,7 @@ Output:
 
 JSON mode reports the preview and metadata only. It does not approve, deny, block, or mutate tool calls.
 
-## Quiet mode
+### Quiet mode
 
 Suppress low-value read-only previews:
 
@@ -136,7 +146,7 @@ Suppress low-value read-only previews:
 echo '{"tool_name":"read_file","tool_input":{"path":"README.md"}}' | notatechbro --quiet
 ```
 
-## Library API
+## Library API for developers
 
 The deterministic engine can also be reused from TypeScript or JavaScript:
 
@@ -154,7 +164,7 @@ console.log(explainAction(action).message);
 
 The package root exports the shared normalizer and dedicated Claude, Codex, Hermes, and generic adapter entrypoints.
 
-## Examples
+## More examples
 
 ```bash
 echo '{"tool_name":"Bash","tool_input":{"command":"rm -rf build && npm install"}}' | notatechbro
@@ -171,7 +181,7 @@ echo '{"tool_name":"Write","tool_input":{"file_path":"src/app.ts"}}' | notatechb
 
 The static landing page lives at `docs/landing.html`.
 
-The polished HTML docs are meant for normal users:
+The polished HTML docs include a beginner path and separate developer reference pages:
 
 - `docs/quickstart.html`
 - `docs/cli-adapters.html`
@@ -211,7 +221,7 @@ Community files:
 
 This checkpoint includes adapter smoke tests against representative Claude Code, Hermes, and Codex payloads. See `docs/hook-verification.md` for the exact inputs, outputs, and remaining caveats.
 
-Codex CLI 0.134+ `PreToolUse` config and payload shape are documented and covered by adapter tests. A full interactive Codex hook run with hook trust accepted is still the final end-to-end check.
+Codex `PreToolUse` config and payload shapes are documented and covered by adapter tests. Exact hook behavior can change between host CLI releases, so verification notes remain explicit about what was tested.
 
 ## Development
 

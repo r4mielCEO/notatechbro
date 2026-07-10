@@ -1,5 +1,7 @@
 # Safety and UX Guidance
 
+NotATechBro explains the likely impact of a command. It does not run, approve, block, or change the command. The user's coding agent keeps its normal approval controls.
+
 ## Main UX goal
 
 Help people understand what the agent is about to do.
@@ -81,7 +83,7 @@ Modes:
 
 ## Privacy
 
-Do not send command contents, file contents, or paths to an external LLM by default.
+The current release explains commands locally. It does not send command contents, file contents, or paths to an external LLM.
 
 If optional LLM mode is added:
 

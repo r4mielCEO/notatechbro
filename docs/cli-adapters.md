@@ -1,14 +1,17 @@
-# CLI Adapters
+# Connect Your Agent
 
-This project supports multiple host CLIs by normalizing their hook payloads into one internal action model.
+Install NotATechBro first:
 
-Human preview text should go to stderr by default. Stdout is reserved for host protocols that expect JSON.
+```bash
+npm install --global notatechbro
+notatechbro --check
+```
 
-## Claude Code
+Then choose Claude Code or Codex below. Start a new agent session after changing the configuration.
 
-Claude Code command hooks such as `PreToolUse` receive JSON on stdin. Because stdout can be used by hook protocols for decisions, `notatechbro` prints the normal human sentence to stderr by default.
+## Claude Code CLI
 
-Example `.claude/settings.json` snippet:
+Create `.claude/settings.json` in your project and add:
 
 ```json
 {
@@ -28,7 +31,56 @@ Example `.claude/settings.json` snippet:
 }
 ```
 
-Common payload shape supported by the MVP:
+If the file already contains settings, keep them and add the `hooks` section alongside them.
+
+Start a new Claude Code session and ask it to run `npm test`. The expected preview is:
+
+```text
+This will run this project's tests.
+```
+
+## Codex CLI
+
+Open `~/.codex/config.toml` and add:
+
+```toml
+[features]
+hooks = true
+
+[[hooks.PreToolUse]]
+matcher = "Bash"
+hooks = [{ type = "command", command = "notatechbro", timeout = 5 }]
+```
+
+If `[features]` already exists, add `hooks = true` to that section instead of creating a second one. Start a new Codex session and review the hook-trust prompt if one appears.
+
+Ask Codex to run `npm test`. The expected preview is the same one-sentence explanation shown above.
+
+## Troubleshooting
+
+- If `notatechbro` is not found, run `notatechbro --check` and reinstall the package if needed.
+- If no preview appears, start a new agent session and confirm the configuration is in the correct file.
+- For Codex, confirm hooks are enabled and the hook has been trusted.
+- Do not use `notatechbro --json` as a Codex hook response. The project is explanation-only.
+
+## Advanced: Hermes CLI
+
+Hermes can call NotATechBro from a `pre_tool_call` hook:
+
+```yaml
+hooks:
+  pre_tool_call:
+    - command: "notatechbro"
+      matcher: "terminal|bash|shell|write_file|read_file|patch"
+```
+
+Configuration placement can differ by Hermes version. Verify it against the installed Hermes documentation before treating the integration as complete.
+
+## Advanced: Supported Payloads
+
+NotATechBro normalizes host-specific hook payloads into one internal action model. Human preview text goes to stderr by default; stdout is used only in explicit JSON mode.
+
+### Claude Code payload
 
 ```json
 {
@@ -38,49 +90,9 @@ Common payload shape supported by the MVP:
 }
 ```
 
-Supported Claude tool names:
+Supported Claude tool names include `Bash`, `Write`, `Edit`, `MultiEdit`, and `Read`.
 
-- `Bash` -> shell command
-- `Write` -> file write/overwrite
-- `Edit`, `MultiEdit` -> file edit
-- `Read` -> file read, suppressible with `--quiet`
-
-## Hermes CLI
-
-Hermes shell hooks can call `notatechbro` from `pre_tool_call`. The MVP should remain observer-only: it explains but does not block.
-
-Example config snippet:
-
-```yaml
-hooks:
-  pre_tool_call:
-    - command: "notatechbro"
-      matcher: "terminal|bash|shell|write_file|read_file|patch"
-```
-
-Common payload shape supported by the MVP:
-
-```json
-{
-  "hook_event_name": "pre_tool_call",
-  "tool_name": "terminal",
-  "tool_input": { "command": "git push" },
-  "cwd": "/path/to/project"
-}
-```
-
-Supported Hermes tool names:
-
-- `terminal`, `bash`, `shell` -> shell command
-- `write_file` -> file write/overwrite
-- `patch`, `edit_file` -> file edit
-- `read_file` -> file read, suppressible with `--quiet`
-
-## Codex CLI
-
-Codex CLI 0.134+ exposes Claude-style lifecycle hooks from `~/.codex/config.toml` when hooks are enabled. NotATechBro should run as an observer-only command hook: it writes the human preview to stderr and leaves stdout empty by default.
-
-Candidate supported payloads:
+### Codex payloads
 
 ```json
 {
@@ -96,12 +108,7 @@ Candidate supported payloads:
 }
 ```
 
-```json
-{
-  "tool_name": "shell",
-  "tool_input": { "command": "pytest" }
-}
-```
+The tolerant Codex adapter also accepts `shell`, `shell_command`, and `exec_command`, including object or serialized-JSON arguments:
 
 ```json
 {
@@ -112,26 +119,21 @@ Candidate supported payloads:
 }
 ```
 
-The tolerant Codex adapter also accepts `shell`, `shell_command`, and `exec_command`, with object or serialized-JSON arguments.
+### Hermes payload
 
-Config pattern:
-
-```toml
-[features]
-hooks = true
-
-[[hooks.PreToolUse]]
-matcher = "Bash"
-hooks = [{ type = "command", command = "notatechbro", timeout = 5 }]
+```json
+{
+  "hook_event_name": "pre_tool_call",
+  "tool_name": "terminal",
+  "tool_input": { "command": "git push" },
+  "cwd": "/path/to/project"
+}
 ```
 
-Do not use `notatechbro --json` for Codex yet. Codex has its own hook response schema for blocking or mutating tool calls; this project is currently explanation-only.
+## Adapter Rules
 
-## Adapter implementation rules
-
-1. Keep adapters tolerant: partial payloads should still produce a fallback preview.
-2. Keep interpretation in shared rules, not host-specific adapters.
-3. Do not send payload contents to external services.
-4. Print human text to stderr by default.
-5. Only use stdout in `--json` mode.
-6. Do not claim approval or safety. JSON mode contains explanation metadata, not a decision.
+1. Partial or unfamiliar payloads should still produce an honest fallback.
+2. Interpretation belongs in shared rules, not host-specific adapters.
+3. Payload contents must not be sent to external services.
+4. Human text goes to stderr by default.
+5. JSON mode contains explanation metadata, not an approval decision.

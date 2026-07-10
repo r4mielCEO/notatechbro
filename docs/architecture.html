@@ -4,7 +4,12 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Architecture — NotATechBro</title>
-    <meta name="description" content="The local adapter, normalization, and rule-engine architecture behind NotATechBro." />
+    <meta name="description" content="How NotATechBro turns agent actions into local plain-English command previews." />
+    <meta property="og:title" content="For Developers — NotATechBro Architecture" />
+    <meta property="og:description" content="How NotATechBro turns agent actions into local plain-English previews." />
+    <meta property="og:image" content="https://r4mielceo.github.io/notatechbro/assets/notatechbro-landing-preview.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="canonical" href="https://r4mielceo.github.io/notatechbro/architecture.html" />
     <link rel="icon" type="image/png" href="assets/notatechbro-icon.png" />
     <link rel="apple-touch-icon" href="assets/notatechbro-icon.png" />
     <link rel="stylesheet" href="assets/docs.css" />
@@ -13,23 +18,23 @@
     <header class="nav">
       <div class="nav-inner">
         <a class="brand" href="landing.html"><img src="assets/notatechbro-icon.png" alt="" aria-hidden="true" /><span>NotATechBro</span></a>
-        <div class="nav-actions"><a href="landing.html">Landing</a><a href="quickstart.html">Quickstart</a></div>
+        <div class="nav-actions"><a href="landing.html">Home</a><a href="quickstart.html">Get started</a><a href="cli-adapters.html">Connect</a></div>
       </div>
     </header>
     <main class="doc-shell">
       <section class="hero">
-        <p class="eyebrow">Architecture</p>
-        <h1>Normalize the hook. Explain the action.</h1>
-        <p>The first version is deterministic and local. There is no daemon, database, cloud account, or required LLM.</p>
+        <p class="eyebrow">For developers</p>
+        <h1>A small local engine turns commands into explanations.</h1>
+        <p>The simple version: an agent sends an action, local rules explain it, and one short sentence comes back. No server or required AI model is involved.</p>
       </section>
       <section class="doc-grid">
         <aside class="card">
-          <h2>Flow</h2>
-          <p>Hook payload → adapter-compatible normalizer → normalized action → deterministic rule engine → one preview sentence.</p>
+          <h2>Simple flow</h2>
+          <p>Agent action → local explanation rules → plain-English preview.</p>
         </aside>
         <article class="prose">
-          <div class="github-strip"><span>See the source layout and model types in GitHub.</span><a class="button" href="https://github.com/r4mielCEO/notatechbro/blob/main/docs/architecture.md">View on GitHub</a></div>
-          <h2>Core model</h2>
+          <div class="github-strip"><span>Need implementation details and public types?</span><a class="button" href="https://github.com/r4mielCEO/notatechbro/blob/main/docs/architecture.md">Open technical guide</a></div>
+          <h2>How the implementation works</h2>
           <p>Host-specific JSON becomes a <code>NormalizedAction</code>: shell command, file write, file edit, file delete, file read, or unknown tool.</p>
           <pre><code>Agent CLI hook payload
         ↓
@@ -39,7 +44,7 @@ Rule engine
         ↓
 Plain-English preview</code></pre>
           <h2>Rule engine</h2>
-          <p>The MVP covers common deletes, installs, tests, git commands, output redirection, file writes, file edits, and unknown-command fallbacks.</p>
+          <p>The current release covers common deletes, installs, tests, git commands, output redirection, file writes, file edits, and honest fallbacks for unfamiliar commands.</p>
           <h2>Privacy posture</h2>
           <ul>
             <li>No network calls.</li>
@@ -50,6 +55,6 @@ Plain-English preview</code></pre>
         </article>
       </section>
     </main>
-    <footer class="footer"><div class="footer-inner">Deterministic rules first. Optional LLM summaries can wait.</div></footer>
+    <footer class="footer"><div class="footer-inner">Small local rules first. More complexity only when it clearly helps users.</div></footer>
   </body>
 </html>

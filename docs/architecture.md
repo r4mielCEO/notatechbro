@@ -1,6 +1,12 @@
 # Architecture
 
-## High-level flow
+In plain English: an agent sends an action, local rules explain it, and one short sentence comes back. No server or required AI model is involved.
+
+```text
+Agent action → local explanation rules → plain-English preview
+```
+
+## Technical flow
 
 ```text
 Agent CLI hook payload
@@ -21,7 +27,7 @@ One plain-English preview sentence
 - Short, honest wording.
 - Deterministic rules before any optional LLM mode.
 - No command approval, blocking, or mutation in the MVP.
-- Compatible with Claude Code, Codex-style payloads, Hermes, and generic tool payloads.
+- Compatible with Claude Code CLI, Codex CLI, Hermes, and generic tool payloads.
 
 ## Core model
 
