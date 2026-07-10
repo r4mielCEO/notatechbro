@@ -22,8 +22,8 @@
     }
   },
   "bin": {
-    "notatechbro": "./dist/cli.js",
-    "change-preview": "./dist/cli.js"
+    "notatechbro": "dist/cli.js",
+    "change-preview": "dist/cli.js"
   },
   "files": [
     "dist",

@@ -7,8 +7,8 @@ describe("package metadata", () => {
     const pkg = JSON.parse(readFileSync("package.json", "utf8"));
 
     expect(pkg.bin).toMatchObject({
-      notatechbro: "./dist/cli.js",
-      "change-preview": "./dist/cli.js",
+      notatechbro: "dist/cli.js",
+      "change-preview": "dist/cli.js",
     });
     expect(Object.keys(pkg.bin)[0]).toBe("notatechbro");
     expect(pkg.scripts.lint).toBe("tsc --noEmit");
